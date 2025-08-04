@@ -14,7 +14,8 @@ class Formulir extends Model
 
     protected $fillable = [
         'nama_formulir',
-        'tanggal_dibuat'
+        'tanggal_dibuat',
+        'created_by_id' // Tambahkan created_by_id
     ];
 
     // protected $dates = [
@@ -46,5 +47,11 @@ class Formulir extends Model
     public function penilaians()
     {
         return $this->hasMany(Penilaian::class);
+    }
+
+    // Relasi dengan user yang membuat formulir
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by_id');
     }
 }

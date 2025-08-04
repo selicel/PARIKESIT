@@ -1,4 +1,4 @@
-@extends('dashboard.layout')
+﻿@extends('dashboard.layout')
 @section('title', 'Penilaian Indikator ' . $indikator->nama_indikator)
 @section('content')
     <div class="flex justify-between items-center">
@@ -166,10 +166,9 @@
             <div class="col-span-1 space-y-2">
                 <div class="border-2  border-yellow-400 p-4 rounded-md h-full">
                     <h1 class="text-yellow-500 font-semibold text-md mb-2">Catatan</h1>
-                    <p class="text-md text-gray-900">
-                        {{ $nilai_diinput->catatan ??
-                            ' Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vitae totam ratione quis assumenda
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ' }}
+                    <p class="text-md {{ optional($nilai_diinput)->catatan ? 'text-gray-900' : 'text-red-600' }}">
+                        {{ optional($nilai_diinput)->catatan ??
+                            'Tidak ada catatan tambahan untuk penilaian ini.' }}
                     </p>
                 </div>
 
@@ -210,167 +209,65 @@
 
 
         @php
-            $route =
-                $role == 'walidata'
-                    ? 'disposisi.koreksi.indikator.store-koreksi'
-                    : 'disposisi.koreksi.indikator.update-evaluasi';
+            $route = $role == 'walidata'
+                ? 'disposisi.koreksi.indikator.store-koreksi'
+                : 'disposisi.koreksi.indikator.update-evaluasi';
         @endphp
 
-
-
         @if ($role == 'walidata')
-
-            <form action="{{ route($route, [$formulir, $domain, $aspek, $indikator, $nilai_diinput->id]) }}" method="POST"
-                enctype="multipart/form-data">
-                <div class="">
-
-                    @csrf
-                    <div class="space-y-2 mt-5 p-3 border-2 rounded-md font-semibold">
-
-
-                        <input type="hidden" name="penilaian_id" value="{{ $nilai_diinput->id }}">
-                        <div class="font-semibold text-sm text-gray-700">{{ $indikator->nama_indikator }}</div>
-                        <div class="space-y-2 text-sm">
-                            <label for="level1" class="{{ $style }}">
-                                <div class="flex items-start space-x-3">
-                                    <input type="radio" id="level1" name="nilai" value="1"
-                                        class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 1 ? 'checked' : '' }}
-                                        {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 1 ? 'disabled' : '' }}>
-                                    <span>Level 1. Rintisan:<br>SDS belum dilakukan oleh seluruh Produsen Data</span>
-                                </div>
-                            </label>
-                            <label for="level2" class="{{ $style }}">
-                                <div class="flex items-start space-x-3">
-                                    <input type="radio" id="level2" name="nilai" value="2"
-                                        class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 2 ? 'checked' : '' }}
-                                        {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 2 ? 'disabled' : '' }}>
-                                    <span>Level 2. Terkelola:<br>Penerapan SDS telah dilakukan oleh setiap Produsen Data
-                                        sesuai
-                                        standar masing-masing</span>
-                                </div>
-                            </label>
-                            <label for="level3" class="{{ $style }}">
-                                <div class="flex items-start space-x-3">
-                                    <input type="radio" id="level3" name="nilai" value="3"
-                                        class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 3 ? 'checked' : '' }}
-                                        {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 3 ? 'disabled' : '' }}>
-                                    <span>Level 3. Terdefinisi:<br>SDS dilakukan berdasarkan kaidah yang ditetapkan dan
-                                        berlaku
-                                        untuk seluruh Produsen Data</span>
-                                </div>
-                            </label>
-                            <label for="level4" class="{{ $style }}">
-                                <div class="flex items-start space-x-3">
-                                    <input type="radio" id="level4" name="nilai" value="4"
-                                        class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 4 ? 'checked' : '' }}
-                                        {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 4 ? 'disabled' : '' }}>
-                                    <span>Level 4. Terpadu:<br>SDS dilakukan melalui reviu dan evaluasi berkala</span>
-                                </div>
-                            </label>
-                            <label for="level5" class="{{ $style }}">
-                                <div class="flex items-start space-x-3">
-                                    <input type="radio" id="level5" name="nilai" value="5"
-                                        class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 5 ? 'checked' : '' }}
-                                        {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 5 ? 'disabled' : '' }}>
-                                    <span>Level 5. Optimum:<br>Pemutakhiran SDS dilakukan bersama Walidata</span>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                </div>
-
-
-
-
-                @if ($role == 'admin')
-                    <div class="mt-5 font-semibold">
-                        <label for="evaluasi" class="text-sm font-semibold text-gray-700 mb-1 block">Evaluasi</label>
-                        <textarea id="evaluasi" name="evaluasi" rows="4" class="w-full border rounded p-2 text-sm"
-                            placeholder="Masukkan evaluasi..."></textarea>
-
-                    </div>
-                @endif
-
-
-                <div class="mt-10">
-
-
-                    @if ($nilai_diinput->nilai_diupdate != null)
-                        <a href="{{ route('disposisi.koreksi.isi-domain', [$opd->name, $formulir->nama_formulir, $domain->nama_domain]) }}"
-                            class="bg-gray-600 shadow hover:bg-gray-800 dark:hover:bg-gray-700  p-3 w-full text-white mt-4 rounded-md text-center">Kembali</a>
-                    @else
-                        <div class="flex justify-between">
-                            <button type="submit"
-                                class="bg-indigo-500 p-3 w-50 text-white mt-4 rounded-md">{{ $role == 'walidata' ? 'Simpan Koreksi' : 'Simpan Evaluasi' }}</button>
-
-                            <a href="{{ route('disposisi.koreksi.isi-domain', [$opd->name, $formulir->nama_formulir, $domain->nama_domain]) }}"
-                                class="bg-gray-600 shadow hover:bg-gray-800 dark:hover:bg-gray-700  p-3 text-white mt-4 rounded-md text-center">Kembali</a>
-                        </div>
-                    @endif
-
-                </div>
-            </form>
-        @elseif ($role == 'admin')
-            @if ($nilai_diinput != null)
-                <form action="{{ route($route, [$formulir, $domain, $aspek, $indikator, $nilai_diinput->id]) }}"
-                    method="POST" enctype="multipart/form-data">
+            @if ($nilai_diinput)
+                <form action="{{ route($route, [$formulir, $domain, $aspek, $indikator, $nilai_diinput->id]) }}" method="POST"
+                    enctype="multipart/form-data">
                     <div class="">
 
                         @csrf
-                        <div class="space-y-2 mt-5 p-3 border-2 rounded-md font-semibold ">
+                        <div class="space-y-2 mt-5 p-3 border-2 rounded-md font-semibold">
 
 
                             <input type="hidden" name="penilaian_id" value="{{ $nilai_diinput->id }}">
-                            <div class="font-semibold text-sm text-gray-700">{{ $indikator->nama_indikator }} <b
-                                    class="text-red-600">(Evaluasi)</b> </div>
+                            <div class="font-semibold text-sm text-gray-700">{{ $indikator->nama_indikator }}</div>
                             <div class="space-y-2 text-sm">
-                                <label for="level1_evaluasi" class="{{ $styleEvaluasi }}">
+                                <label for="level1" class="{{ $style }}">
                                     <div class="flex items-start space-x-3">
-                                        <input type="radio" id="level1_evaluasi" name="nilai_evaluasi" value="1"
-                                            class="mt-1 accent-blue-600"
-                                            {{ $nilaiEvaluasiterkunci == 1 ? 'checked' : '' }}
-                                            {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 1 ? 'disabled' : '' }}>
+                                        <input type="radio" id="level1" name="nilai" value="1"
+                                            class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 1 ? 'checked' : '' }}
+                                            {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 1 ? 'disabled' : '' }}>
                                         <span>Level 1. Rintisan:<br>SDS belum dilakukan oleh seluruh Produsen Data</span>
                                     </div>
                                 </label>
-                                <label for="level2_evaluasi" class="{{ $styleEvaluasi }}">
+                                <label for="level2" class="{{ $style }}">
                                     <div class="flex items-start space-x-3">
-                                        <input type="radio" id="level2_evaluasi" name="nilai_evaluasi" value="2"
-                                            class="mt-1 accent-blue-600"
-                                            {{ $nilaiEvaluasiterkunci == 2 ? 'checked' : '' }}
-                                            {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 2 ? 'disabled' : '' }}>
+                                        <input type="radio" id="level2" name="nilai" value="2"
+                                            class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 2 ? 'checked' : '' }}
+                                            {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 2 ? 'disabled' : '' }}>
                                         <span>Level 2. Terkelola:<br>Penerapan SDS telah dilakukan oleh setiap Produsen Data
                                             sesuai
                                             standar masing-masing</span>
                                     </div>
                                 </label>
-                                <label for="level3_evaluasi" class="{{ $styleEvaluasi }}">
+                                <label for="level3" class="{{ $style }}">
                                     <div class="flex items-start space-x-3">
-                                        <input type="radio" id="level3_evaluasi" name="nilai_evaluasi" value="3"
-                                            class="mt-1 accent-blue-600"
-                                            {{ $nilaiEvaluasiterkunci == 3 ? 'checked' : '' }}
-                                            {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 3 ? 'disabled' : '' }}>
+                                        <input type="radio" id="level3" name="nilai" value="3"
+                                            class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 3 ? 'checked' : '' }}
+                                            {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 3 ? 'disabled' : '' }}>
                                         <span>Level 3. Terdefinisi:<br>SDS dilakukan berdasarkan kaidah yang ditetapkan dan
                                             berlaku
                                             untuk seluruh Produsen Data</span>
                                     </div>
                                 </label>
-                                <label for="level4_evaluasi" class="{{ $styleEvaluasi }}">
+                                <label for="level4" class="{{ $style }}">
                                     <div class="flex items-start space-x-3">
-                                        <input type="radio" id="level4_evaluasi" name="nilai_evaluasi" value="4"
-                                            class="mt-1 accent-blue-600"
-                                            {{ $nilaiEvaluasiterkunci == 4 ? 'checked' : '' }}
-                                            {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 4 ? 'disabled' : '' }}>
+                                        <input type="radio" id="level4" name="nilai" value="4"
+                                            class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 4 ? 'checked' : '' }}
+                                            {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 4 ? 'disabled' : '' }}>
                                         <span>Level 4. Terpadu:<br>SDS dilakukan melalui reviu dan evaluasi berkala</span>
                                     </div>
                                 </label>
-                                <label for="level5_evaluasi" class="{{ $styleEvaluasi }}">
+                                <label for="level5" class="{{ $style }}">
                                     <div class="flex items-start space-x-3">
-                                        <input type="radio" id="level5_evaluasi" name="nilai_evaluasi" value="5"
-                                            class="mt-1 accent-blue-600"
-                                            {{ $nilaiEvaluasiterkunci == 5 ? 'checked' : '' }}
-                                            {{ $nilaiEvaluasiterkunci !== null && $nilaiKoreksiTerkunci != 5 ? 'disabled' : '' }}>
+                                        <input type="radio" id="level5" name="nilai" value="5"
+                                            class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 5 ? 'checked' : '' }}
+                                            {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 5 ? 'disabled' : '' }}>
                                         <span>Level 5. Optimum:<br>Pemutakhiran SDS dilakukan bersama Walidata</span>
                                     </div>
                                 </label>
@@ -379,37 +276,20 @@
 
 
 
-                    </div>
 
-
-                    @if ($role == 'admin')
-                        @if ($nilai_diinput->evaluasi == null && $nilai_diinput->nilai_diupdate != 0)
+                        @if ($role == 'admin')
                             <div class="mt-5 font-semibold">
-                                <label for="evaluasi"
-                                    class="text-sm font-semibold text-gray-700 mb-1 block">Evaluasi</label>
-                                <textarea id="evaluasi" name="evaluasi" rows="4"
-                                    class="w-full border-gray-500 border-2 rounded p-2 text-md shadow-md "
-                                    {{ $nilai_diinput->evaluasi ? 'disabled' : '' }} placeholder="Masukkan evaluasi...">{{ $nilai_diinput->evaluasi ?? '' }}</textarea>
-
-                            </div>
-                        @else
-                            <div class="mt-5 font-semibold">
-                                <label for="evaluasi"
-                                    class="text-sm font-semibold text-gray-700 mb-1 block">Evaluasi</label>
-                                <textarea id="evaluasi" name="evaluasi" rows="4"
-                                    class="w-full border-gray-500 border-2 rounded p-2 text-md shadow-md "
-                                    {{ $nilai_diinput->evaluasi ? 'disabled' : '' }} placeholder="Masukkan evaluasi...">{{ $nilai_diinput->evaluasi ?? '' }}</textarea>
+                                <label for="evaluasi" class="text-sm font-semibold text-gray-700 mb-1 block">Evaluasi</label>
+                                <textarea id="evaluasi" name="evaluasi" rows="4" class="w-full border rounded p-2 text-sm"
+                                    placeholder="Masukkan evaluasi..."></textarea>
 
                             </div>
                         @endif
-                    @endif
 
 
+                        <div class="mt-10">
 
-                    <div class="mt-10">
 
-
-                        @if ($role == 'walidata')
                             @if ($nilai_diinput->nilai_diupdate != null)
                                 <a href="{{ route('disposisi.koreksi.isi-domain', [$opd->name, $formulir->nama_formulir, $domain->nama_domain]) }}"
                                     class="bg-gray-600 shadow hover:bg-gray-800 dark:hover:bg-gray-700  p-3 w-full text-white mt-4 rounded-md text-center">Kembali</a>
@@ -422,36 +302,155 @@
                                         class="bg-gray-600 shadow hover:bg-gray-800 dark:hover:bg-gray-700  p-3 text-white mt-4 rounded-md text-center">Kembali</a>
                                 </div>
                             @endif
-                        @elseif ($role == 'admin')
-                            @if ($nilai_diinput->evaluasi != null)
-                                <a href="{{ route('disposisi.koreksi.isi-domain', [$opd->name, $formulir->nama_formulir, $domain->nama_domain]) }}"
-                                    class="bg-gray-600 shadow hover:bg-gray-800 dark:hover:bg-gray-700  p-3 w-full text-white mt-4 rounded-md text-center">Kembali</a>
-                            @else
-                                <div class="flex justify-between">
-                                    <button type="submit"
-                                        class="bg-indigo-500 p-3 w-50 text-white mt-4 rounded-md">{{ $role == 'walidata' ? 'Simpan Koreksi' : 'Simpan Evaluasi' }}</button>
 
-                                    <a href="{{ route('disposisi.koreksi.isi-domain', [$opd->name, $formulir->nama_formulir, $domain->nama_domain]) }}"
-                                        class="bg-gray-600 shadow hover:bg-gray-800 dark:hover:bg-gray-700  p-3 text-white mt-4 rounded-md text-center">Kembali</a>
+                        </div>
+                    </form>
+                @else
+                    <div class="text-center py-10 border-2 border-red-300 bg-red-50 shadow-md rounded-md mt-10">
+                        <p class="text-2xl text-red-900 font-semibold">Belum Ada Penilaian</p>
+                        <p class="font-bold text-red-700">Silakan lakukan penilaian terlebih dahulu</p>
+                    </div>
+                @endif
+
+            @elseif ($role == 'admin')
+                @if ($nilai_diinput != null)
+                    <form action="{{ route($route, [$formulir, $domain, $aspek, $indikator, $nilai_diinput->id]) }}"
+                        method="POST" enctype="multipart/form-data">
+                        <div class="">
+
+                            @csrf
+                            <div class="space-y-2 mt-5 p-3 border-2 rounded-md font-semibold ">
+
+
+                                <input type="hidden" name="penilaian_id" value="{{ $nilai_diinput->id }}">
+                                <div class="font-semibold text-sm text-gray-700">{{ $indikator->nama_indikator }} <b
+                                        class="text-red-600">(Evaluasi)</b> </div>
+                                <div class="space-y-2 text-sm">
+                                    <label for="level1_evaluasi" class="{{ $styleEvaluasi }}">
+                                        <div class="flex items-start space-x-3">
+                                            <input type="radio" id="level1_evaluasi" name="nilai_evaluasi" value="1"
+                                                class="mt-1 accent-blue-600"
+                                                {{ $nilaiEvaluasiterkunci == 1 ? 'checked' : '' }}
+                                                {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 1 ? 'disabled' : '' }}>
+                                            <span>Level 1. Rintisan:<br>SDS belum dilakukan oleh seluruh Produsen Data</span>
+                                        </div>
+                                    </label>
+                                    <label for="level2_evaluasi" class="{{ $styleEvaluasi }}">
+                                        <div class="flex items-start space-x-3">
+                                            <input type="radio" id="level2_evaluasi" name="nilai_evaluasi" value="2"
+                                                class="mt-1 accent-blue-600"
+                                                {{ $nilaiEvaluasiterkunci == 2 ? 'checked' : '' }}
+                                                {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 2 ? 'disabled' : '' }}>
+                                            <span>Level 2. Terkelola:<br>Penerapan SDS telah dilakukan oleh setiap Produsen Data
+                                                sesuai
+                                                standar masing-masing</span>
+                                        </div>
+                                    </label>
+                                    <label for="level3_evaluasi" class="{{ $styleEvaluasi }}">
+                                        <div class="flex items-start space-x-3">
+                                            <input type="radio" id="level3_evaluasi" name="nilai_evaluasi" value="3"
+                                                class="mt-1 accent-blue-600"
+                                                {{ $nilaiEvaluasiterkunci == 3 ? 'checked' : '' }}
+                                                {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 3 ? 'disabled' : '' }}>
+                                            <span>Level 3. Terdefinisi:<br>SDS dilakukan berdasarkan kaidah yang ditetapkan dan
+                                                berlaku
+                                                untuk seluruh Produsen Data</span>
+                                        </div>
+                                    </label>
+                                    <label for="level4_evaluasi" class="{{ $styleEvaluasi }}">
+                                        <div class="flex items-start space-x-3">
+                                            <input type="radio" id="level4_evaluasi" name="nilai_evaluasi" value="4"
+                                                class="mt-1 accent-blue-600"
+                                                {{ $nilaiEvaluasiterkunci == 4 ? 'checked' : '' }}
+                                                {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 4 ? 'disabled' : '' }}>
+                                            <span>Level 4. Terpadu:<br>SDS dilakukan melalui reviu dan evaluasi berkala</span>
+                                        </div>
+                                    </label>
+                                    <label for="level5_evaluasi" class="{{ $styleEvaluasi }}">
+                                        <div class="flex items-start space-x-3">
+                                            <input type="radio" id="level5_evaluasi" name="nilai_evaluasi" value="5"
+                                                class="mt-1 accent-blue-600"
+                                                {{ $nilaiEvaluasiterkunci == 5 ? 'checked' : '' }}
+                                                {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 5 ? 'disabled' : '' }}>
+                                            <span>Level 5. Optimum:<br>Pemutakhiran SDS dilakukan bersama Walidata</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+
+                        @if ($role == 'admin')
+                            @if ($nilai_diinput->evaluasi == null && $nilai_diinput->nilai_diupdate != 0)
+                                <div class="mt-5 font-semibold">
+                                    <label for="evaluasi"
+                                        class="text-sm font-semibold text-gray-700 mb-1 block">Evaluasi</label>
+                                    <textarea id="evaluasi" name="evaluasi" rows="4"
+                                        class="w-full border-gray-500 border-2 rounded p-2 text-md shadow-md "
+                                        {{ $nilai_diinput->evaluasi ? 'disabled' : '' }} placeholder="Masukkan evaluasi...">{{ $nilai_diinput->evaluasi ?? '' }}</textarea>
+
+                                </div>
+                            @else
+                                <div class="mt-5 font-semibold">
+                                    <label for="evaluasi"
+                                        class="text-sm font-semibold text-gray-700 mb-1 block">Evaluasi</label>
+                                    <textarea id="evaluasi" name="evaluasi" rows="4"
+                                        class="w-full border-gray-500 border-2 rounded p-2 text-md shadow-md "
+                                        {{ $nilai_diinput->evaluasi ? 'disabled' : '' }} placeholder="Masukkan evaluasi...">{{ $nilai_diinput->evaluasi ?? '' }}</textarea>
+
                                 </div>
                             @endif
                         @endif
 
 
+
+                        <div class="mt-10">
+
+
+                            @if ($role == 'walidata')
+                                @if ($nilai_diinput->nilai_diupdate != null)
+                                    <a href="{{ route('disposisi.koreksi.isi-domain', [$opd->name, $formulir->nama_formulir, $domain->nama_domain]) }}"
+                                        class="bg-gray-600 shadow hover:bg-gray-800 dark:hover:bg-gray-700  p-3 w-full text-white mt-4 rounded-md text-center">Kembali</a>
+                                @else
+                                    <div class="flex justify-between">
+                                        <button type="submit"
+                                            class="bg-indigo-500 p-3 w-50 text-white mt-4 rounded-md">{{ $role == 'walidata' ? 'Simpan Koreksi' : 'Simpan Evaluasi' }}</button>
+
+                                        <a href="{{ route('disposisi.koreksi.isi-domain', [$opd->name, $formulir->nama_formulir, $domain->nama_domain]) }}"
+                                            class="bg-gray-600 shadow hover:bg-gray-800 dark:hover:bg-gray-700  p-3 text-white mt-4 rounded-md text-center">Kembali</a>
+                                    </div>
+                                @endif
+                            @elseif ($role == 'admin')
+                                @if ($nilai_diinput->evaluasi != null)
+                                    <a href="{{ route('disposisi.koreksi.isi-domain', [$opd->name, $formulir->nama_formulir, $domain->nama_domain]) }}"
+                                        class="bg-gray-600 shadow hover:bg-gray-800 dark:hover:bg-gray-700  p-3 w-full text-white mt-4 rounded-md text-center">Kembali</a>
+                                @else
+                                    <div class="flex justify-between">
+                                        <button type="submit"
+                                            class="bg-indigo-500 p-3 w-50 text-white mt-4 rounded-md">{{ $role == 'walidata' ? 'Simpan Koreksi' : 'Simpan Evaluasi' }}</button>
+
+                                        <a href="{{ route('disposisi.koreksi.isi-domain', [$opd->name, $formulir->nama_formulir, $domain->nama_domain]) }}"
+                                            class="bg-gray-600 shadow hover:bg-gray-800 dark:hover:bg-gray-700  p-3 text-white mt-4 rounded-md text-center">Kembali</a>
+                                    </div>
+                                @endif
+                            @endif
+
+
+                        </div>
+                    </form>
+                @else
+                    <div class="text-center  py-10 border-2 border-gray-300 shadow-md rounded-md mt-10">
+                        <p class="text-2xl text-gray-900 font-semibold">Data belum ada</p>
+                        <p class="font-bold">Silakan menunggu penilaian OPD terlebih dahulu</p>
                     </div>
-                </form>
-            @else
-                <div class="text-center  py-10 border-2 border-gray-300 shadow-md rounded-md mt-10">
-                    <p class="text-2xl text-gray-900 font-semibold">Data belum ada</p>
-                    <p class="font-bold">Silakan menunggu penilaian terlebih dahulu</p>
-                </div>
+                @endif
             @endif
 
 
-        @endif
-
-
-
+        {{-- @endif --}}
 
     </div>
 

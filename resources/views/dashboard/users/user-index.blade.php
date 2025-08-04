@@ -15,13 +15,31 @@
 
         <hr class="my-4 border-t-2 border-gray-300">
 
+        <div class="mb-4 flex space-x-4">
+            <div class="relative w-full">
+                <div class="relative flex-grow">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" id="searchUser"
+                        placeholder="Cari user (nama, email, role)..."
+                        class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <span id="clearSearchIcon" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer hover:text-red-500 hidden">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div id="noUserFound" class="hidden text-center py-10 text-gray-600">
+            Tidak ada user yang cocok dengan pencarian
+        </div>
 
         <table class="table-auto table-bordered w-full ">
             <thead>
                 <tr class="bg-blue-200 border-2">
                     <th class="px-4 py-2 text-left">Nama</th>
                     <th class="px-4 py-2 text-left">Email</th>
-                    <th class="px-4 py-2 text-left">Alamat</th>
                     <th class="px-4 py-2 text-left">Role</th>
                     <th class="px-4 py-2 text-left">Tanggal Dibuat</th>
                     <th class="px-4 py-2 text-left">Aksi</th>
@@ -29,11 +47,10 @@
             </thead>
             <tbody>
                 @foreach ($users as $user)
-                    <tr class="border border-1">
-                        <td class="px-4 py-2">{{ $user->name }}</td>
-                        <td class="px-4 py-2">{{ $user->email }}</td>
-                        <td class="px-4 py-2">{{ $user->instansi->alamat_instansi ?? '-' }}</td>
-                        <td class="px-4 py-2">
+                    <tr class="user-row border border-1">
+                        <td class="px-4 py-2 user-name">{{ $user->name }}</td>
+                        <td class="px-4 py-2 user-email">{{ $user->email }}</td>
+                        <td class="px-4 py-2 user-role">
                             @if ($user->role == 'opd')
                                 <button class="px-2 py-1 bg-yellow-600 text-white rounded">OPD</button>
                             @elseif ($user->role == 'admin')
@@ -42,7 +59,7 @@
                                 <button class="px-2 py-1 bg-green-500 text-white rounded">Walidata</button>
                             @endif
                         </td>
-                        <td class="px-4 py-2">
+                        <td class="px-4 py-2 user-created-at">
                             {{ \Carbon\Carbon::parse($user->created_at)->locale('id')->isoFormat('dddd, D MMMM Y') }}
                         </td>
                         <td class="px-4 py-2">
@@ -83,9 +100,65 @@
 
 @push('scripts')
     <script>
-        $('.deleteBtn').click(function(e) {
+    $(document).ready(function() {
+        // Live Search
+        const searchInput = $('#searchUser');
+        const clearSearchIcon = $('#clearSearchIcon');
+        const noUserFound = $('#noUserFound');
 
-            var id = $(this).data('id');
+        // Fungsi untuk melakukan pencarian
+        function performSearch() {
+            const searchTerm = searchInput.val().toLowerCase().trim();
+            let visibleItems = 0;
+
+            $('.user-row').each(function() {
+                const name = $(this).find('.user-name').text().toLowerCase();
+                const email = $(this).find('.user-email').text().toLowerCase();
+                const role = $(this).find('.user-role').text().toLowerCase();
+                const createdAt = $(this).find('.user-created-at').text().toLowerCase();
+
+                if (name.includes(searchTerm) ||
+                    email.includes(searchTerm) ||
+                    role.includes(searchTerm) ||
+                    createdAt.includes(searchTerm)) {
+                    $(this).show();
+                    visibleItems++;
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            // Tampilkan/sembunyikan pesan "Tidak ada user"
+            if (visibleItems === 0) {
+                noUserFound.removeClass('hidden');
+            } else {
+                noUserFound.addClass('hidden');
+            }
+
+            // Tampilkan/sembunyikan ikon clear
+            if (searchTerm) {
+                clearSearchIcon.removeClass('hidden');
+            } else {
+                clearSearchIcon.addClass('hidden');
+            }
+        }
+
+        // Jalankan pencarian saat mengetik
+        searchInput.on('input', performSearch);
+
+        // Aksi clear search
+        clearSearchIcon.on('click', function() {
+            searchInput.val('');
+            $('.user-row').show();
+            noUserFound.addClass('hidden');
+            clearSearchIcon.addClass('hidden');
+        });
+
+        // Konfirmasi Hapus User
+        $('.deleteBtn').click(function(e) {
+            e.preventDefault(); // Mencegah submit form langsung
+
+            const form = $(this).closest('form');
 
             Swal.fire({
                 title: 'Apakah kamu yakin?',
@@ -97,10 +170,10 @@
                 confirmButtonText: 'Ya, hapus user ini!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $(this).closest('form').submit();
-
+                    form.submit(); // Submit form jika dikonfirmasi
                 }
-            })
+            });
         });
+    });
     </script>
 @endpush

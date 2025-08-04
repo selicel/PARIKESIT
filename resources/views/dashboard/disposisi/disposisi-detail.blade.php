@@ -23,15 +23,15 @@
                             <h1 class="text-2xl font-bold text-gray-800 mb-2">
                                 Detail Kegiatan {{ $formulir->nama_formulir ?? 'perbaru' }}
                             </h1>
-                            <p class="text-gray-600">
+                            {{-- <p class="text-gray-600">
                                 Berikut adalah daftar OPD yang sudah melakukan penilaian
-                            </p>
+                            </p> --}}
                         </div>
-                        <button
+                        {{-- <button
                             class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition duration-200">
                             <i class="fas fa-download mr-2"></i>
                             Ekspor Data
-                        </button>
+                        </button> --}}
                     </div>
 
                     <!-- Progress Summary -->

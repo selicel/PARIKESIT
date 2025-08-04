@@ -8,6 +8,7 @@ use App\Models\Formulir;
 use App\Models\Indikator;
 use Illuminate\Http\Request;
 use App\Models\FormulirDomain;
+use Illuminate\Support\Facades\Auth; // Tambahkan Auth facade
 
 class FormulirController extends Controller
 {
@@ -20,9 +21,20 @@ class FormulirController extends Controller
 
     public function index()
     {
-        $formulirs = Formulir::with('domains')->latest()->get();
+        // Dapatkan user yang sedang login
+        $user = auth()->user();
 
-        // dd($formulirs);
+        // Jika user adalah admin, tampilkan semua formulir
+        if ($user->role === 'admin') {
+            $formulirs = Formulir::with('domains')->latest()->get();
+        } else {
+            // Untuk user lain, hanya tampilkan formulir milik mereka
+            $formulirs = Formulir::where('created_by_id', $user->id)
+                ->with('domains')
+                ->latest()
+                ->get();
+        }
+
         return view('dashboard.formulir.form-index', compact('formulirs'));
     }
 
@@ -47,7 +59,8 @@ class FormulirController extends Controller
 
 
         $formulir =  Formulir::create([
-            'nama_formulir' => $request->nama_formulir
+            'nama_formulir' => $request->nama_formulir,
+            'created_by_id' => Auth::id() // Tambahkan created_by_id
         ]);
 
         $domainCount = Domain::count();

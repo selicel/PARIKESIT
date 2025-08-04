@@ -9,17 +9,33 @@ use App\Models\FileDokumentasi;
 use App\Models\DokumentasiKegiatan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use ZipArchive;
 
 class DokumentasiKegiatanController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $dokumentasis = DokumentasiKegiatan::with('file_dokumentasi')->latest()->get();
+        $query = DokumentasiKegiatan::with('file_dokumentasi')->latest();
 
-        // dd($formulirs);
+        // Jika ada parameter pencarian
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('judul_dokumentasi', 'like', '%' . $search . '%');
+        }
+
+        // Filter berdasarkan tanggal
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        $dokumentasis = $query->get();
+
         return view('dashboard.dokumentasi.dokumentasi-index', compact('dokumentasis'));
     }
 
@@ -250,5 +266,158 @@ class DokumentasiKegiatanController extends Controller
         $dokumentasiKegiatan->delete();
 
         return redirect()->route('dokumentasi.index')->with('success', 'Dokumentasi berhasil dihapus');
+    }
+
+    public function downloadAll(DokumentasiKegiatan $dokumentasiKegiatan)
+    {
+        // Pastikan dokumentasi dimuat dengan file-file terkait
+        $dokumentasiKegiatan->load('file_dokumentasi');
+
+        // Buat nama file zip
+        $zipFileName = Str::slug($dokumentasiKegiatan->judul_dokumentasi) . '-dokumentasi.zip';
+
+        // Inisiasi ZipArchive
+        $zip = new \ZipArchive();
+        $zipPath = storage_path('app/public/dokumentasi-zip/' . $zipFileName);
+
+        // Pastikan direktori tersedia
+        if (!file_exists(dirname($zipPath))) {
+            mkdir(dirname($zipPath), 0777, true);
+        }
+
+        // Buka zip
+        if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
+            // Tambahkan file utama
+            $mainFiles = [
+                'bukti_dukung_undangan_dokumentasi' => 'Bukti Dukung Undangan.pdf',
+                'daftar_hadir_dokumentasi' => 'Daftar Hadir.pdf',
+                'materi_dokumentasi' => 'Materi.pdf',
+                'notula_dokumentasi' => 'Notula.pdf'
+            ];
+
+            foreach ($mainFiles as $field => $fileName) {
+                $filePath = $dokumentasiKegiatan->$field;
+                if ($filePath && file_exists(public_path($filePath))) {
+                    $zip->addFile(public_path($filePath), $fileName);
+                }
+            }
+
+            // Tambahkan file media tambahan
+            foreach ($dokumentasiKegiatan->file_dokumentasi as $index => $media) {
+                $mediaPath = $media->nama_file;
+                if (file_exists(public_path($mediaPath))) {
+                    $zip->addFile(
+                        public_path($mediaPath),
+                        'Media/' . ($index + 1) . '.' . $media->tipe_file
+                    );
+                }
+            }
+
+            // Tutup zip
+            $zip->close();
+
+            // Download zip
+            return response()->download($zipPath, $zipFileName)->deleteFileAfterSend(true);
+        }
+
+        // Jika gagal membuat zip
+        return redirect()->back()->with('error', 'Gagal membuat file zip');
+    }
+
+    public function downloadMultiple(Request $request)
+    {
+        $selectedDokumentasiIds = $request->input('selected_dokumentasi', []);
+
+        if (empty($selectedDokumentasiIds)) {
+            return redirect()->back()->with('error', 'Tidak ada dokumentasi yang dipilih');
+        }
+
+        // Ambil dokumentasi yang dipilih
+        $dokumentasis = DokumentasiKegiatan::whereIn('id', $selectedDokumentasiIds)
+            ->with('file_dokumentasi')
+            ->get();
+
+        // Buat nama file zip
+        $zipFileName = 'dokumentasi-multiple-' . now()->format('YmdHis') . '.zip';
+
+        // Inisiasi ZipArchive
+        $zip = new \ZipArchive();
+        $zipPath = storage_path('app/public/dokumentasi-zip/' . $zipFileName);
+
+        // Pastikan direktori tersedia
+        if (!file_exists(dirname($zipPath))) {
+            mkdir(dirname($zipPath), 0777, true);
+        }
+
+        // Buka zip
+        if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
+            foreach ($dokumentasis as $dokumentasi) {
+                // Buat folder untuk setiap dokumentasi
+                $dokumentasiFolder = Str::slug($dokumentasi->judul_dokumentasi) . '/';
+                $zip->addEmptyDir($dokumentasiFolder);
+
+                // Tambahkan file utama
+                $mainFiles = [
+                    'bukti_dukung_undangan_dokumentasi' => 'Bukti Dukung Undangan.pdf',
+                    'daftar_hadir_dokumentasi' => 'Daftar Hadir.pdf',
+                    'materi_dokumentasi' => 'Materi.pdf',
+                    'notula_dokumentasi' => 'Notula.pdf'
+                ];
+
+                foreach ($mainFiles as $field => $fileName) {
+                    $filePath = $dokumentasi->$field;
+                    if ($filePath && file_exists(public_path($filePath))) {
+                        $zip->addFile(
+                            public_path($filePath),
+                            $dokumentasiFolder . $fileName
+                        );
+                    }
+                }
+
+                // Tambahkan file media tambahan
+                $mediaFolder = $dokumentasiFolder . 'Media/';
+                $zip->addEmptyDir($mediaFolder);
+
+                foreach ($dokumentasi->file_dokumentasi as $index => $media) {
+                    $mediaPath = $media->nama_file;
+                    if (file_exists(public_path($mediaPath))) {
+                        $zip->addFile(
+                            public_path($mediaPath),
+                            $mediaFolder . ($index + 1) . '.' . $media->tipe_file
+                        );
+                    }
+                }
+            }
+
+            // Tutup zip
+            $zip->close();
+
+            // Download zip
+            return response()->download($zipPath, $zipFileName)->deleteFileAfterSend(true);
+        }
+
+        // Jika gagal membuat zip
+        return redirect()->back()->with('error', 'Gagal membuat file zip');
+    }
+
+    public function downloadPage()
+    {
+        $user = Auth::user();
+
+        // Jika bukan admin, filter dokumentasi berdasarkan user
+        if ($user->role !== 'admin') {
+            $dokumentasis = DokumentasiKegiatan::whereHas('file_dokumentasi')
+                ->where('created_by_id', $user->id)
+                ->with('file_dokumentasi')
+                ->latest()
+                ->get();
+        } else {
+            $dokumentasis = DokumentasiKegiatan::whereHas('file_dokumentasi')
+                ->with('file_dokumentasi')
+                ->latest()
+                ->get();
+        }
+
+        return view('dashboard.dokumentasi.download', compact('dokumentasis'));
     }
 }

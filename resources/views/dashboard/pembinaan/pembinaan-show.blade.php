@@ -59,6 +59,7 @@
             </div>
 
             <div class="col-span-4">
+                @if(Auth::user()->role !== 'admin')
                 <div class="flex gap-5">
                     <div class="w-1/2">
                         <a href="{{ route('pembinaan.edit', $pembinaan->id) }}"
@@ -74,7 +75,7 @@
                         </form>
                     </div>
                 </div>
-
+                @endif
             </div>
 
 
@@ -187,9 +188,14 @@
 
         </div>
 
-        <div class="mt-4">
+        <div class="mt-4 flex space-x-2">
             <a href="{{ route('pembinaan.index') }}"
                 class="bg-indigo-800 text-white px-4 py-4 rounded hover:bg-gray-500 hover:text-black">Kembali</a>
+
+            <a href="{{ route('pembinaan.download-all', $pembinaan->id) }}"
+                class="bg-green-600 text-white px-4 py-4 rounded hover:bg-green-700 flex items-center">
+                <i class="fas fa-download mr-2"></i> Download Semua File
+            </a>
         </div>
 
 

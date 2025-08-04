@@ -68,11 +68,16 @@
                 </div>
             </div>
 
-            <div class="flex justify-end">
+            <div class="flex justify-end space-x-4 mt-6">
+                <a href="{{ route('dokumentasi.index') }}"
+                   class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200 ease-in-out">
+                    Batal
+                </a>
                 <button type="submit"
-                    class="mt-5 p-2 px-8 bg-blue-500 text-white hover:bg-blue-900 hover:text-white ease-in-out transition duration-100 border rounded-md">Simpan</button>
+                        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200 ease-in-out">
+                    Simpan
+                </button>
             </div>
-
         </form>
 
     </div>

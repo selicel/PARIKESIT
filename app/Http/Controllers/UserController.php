@@ -7,10 +7,37 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
-        return view('dashboard.users.user-index', compact('users'));
+        $sortBy = $request->get('sort', 'created_at');
+        $sortDirection = $request->get('direction', 'desc');
+        $search = $request->get('search', '');
+
+        // Daftar kolom yang diizinkan untuk sorting
+        $allowedColumns = ['name', 'email', 'role', 'created_at'];
+
+        // Validasi kolom sorting
+        if (!in_array($sortBy, $allowedColumns)) {
+            $sortBy = 'created_at';
+        }
+
+        // Validasi arah sorting
+        $sortDirection = in_array($sortDirection, ['asc', 'desc']) ? $sortDirection : 'desc';
+
+        // Query dengan pencarian
+        $query = User::query();
+
+        if (!empty($search)) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('role', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->orderBy($sortBy, $sortDirection)->get();
+
+        return view('dashboard.users.user-index', compact('users', 'sortBy', 'sortDirection', 'search'));
     }
 
     public function create()

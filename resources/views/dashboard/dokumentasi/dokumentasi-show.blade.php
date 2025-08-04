@@ -93,7 +93,7 @@
                                 {{-- <div class="text-xs text-gray-600 truncate">undangan_penilaian_mandiri.pdf</div> --}}
                             </div>
                         </div>
-                        <a href="{{ asset($dokumentasiKegiatan->bukti_dukung_undangan_dokumentasi) }}"
+                        <a href="{{ asset($dokumentasiKegiatan->bukti_dukung_undangan_dokumentasi) }}" target="_blank"
                             class="flex items-center text-gray-700 hover:text-black text-sm">
                             <i class="fas fa-download mr-1"></i> Download
                         </a>
@@ -108,7 +108,7 @@
                                 {{-- <div class="text-xs text-gray-600 truncate">daftar_hadir_april.pdf</div> --}}
                             </div>
                         </div>
-                        <a href="{{ asset( $dokumentasiKegiatan->daftar_hadir_dokumentasi) }}"
+                        <a href="{{ asset( $dokumentasiKegiatan->daftar_hadir_dokumentasi) }}" target="_blank"
                             class="flex items-center text-gray-700 hover:text-black text-sm">
                             <i class="fas fa-download mr-1"></i> Download
                         </a>
@@ -123,7 +123,7 @@
                                 {{-- <div class="text-xs text-gray-600 truncate">notula_rapat_evaluasi.pdf</div> --}}
                             </div>
                         </div>
-                        <a href="{{ asset( $dokumentasiKegiatan->notula_dokumentasi) }}"
+                        <a href="{{ asset( $dokumentasiKegiatan->notula_dokumentasi) }}" target="_blank"
                             class="flex items-center text-gray-700 hover:text-black text-sm">
                             <i class="fas fa-download mr-1"></i> Download
                         </a>
@@ -139,7 +139,7 @@
                                 {{-- <div class="text-xs text-gray-600 truncate">notula_rapat_evaluasi.pdf</div> --}}
                             </div>
                         </div>
-                        <a href="{{ asset( $dokumentasiKegiatan->materi_dokumentasi) }}"
+                        <a href="{{ asset( $dokumentasiKegiatan->materi_dokumentasi) }}" target="_blank"
                             class="flex items-center text-gray-700 hover:text-black text-sm">
                             <i class="fas fa-download mr-1"></i> Download
                         </a>
@@ -202,9 +202,14 @@
 
         </div>
 
-        <div class="mt-4">
-            <a href="{{ url()->previous() }}"
-                class="bg-indigo-800 text-white px-4 py-4 rounded hover:bg-gray-500 hover:text-black">Kembali</a>
+        <div class="mt-4 flex space-x-4">
+            <a href="{{ route('dokumentasi.index') }}"
+                class="bg-indigo-800 text-white px-4 py-2 rounded hover:bg-gray-500 hover:text-black">Kembali</a>
+
+            <a href="{{ route('dokumentasi.download-all', $dokumentasiKegiatan->id) }}"
+                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center">
+                <i class="fas fa-download mr-2"></i> Download Semua File
+            </a>
         </div>
 
 

@@ -26,8 +26,8 @@
             <!-- Box Kiri -->
             <div class="col-span-1 border-2 border-blue-400 bg-white p-4 rounded-md shadow-sm">
                 <div class="text-md text-blue-600 font-bold mb-4">Tahapan saat ini</div>
-                <div class="text-sm text-blue-700 mb-3">Penilaian Mandiri (1 April 2024 – 31 April 2024)</div>
-                <div class="text-xs text-gray-500 mb-3">Berakhir dalam 4 hari 5 jam 49 menit 24 detik</div>
+                <div class="text-sm text-blue-700 mb-3">Penilaian Mandiri </div>
+                <div class="text-xs text-gray-500 mb-3"></div>
                 <div class="border rounded-md p-3 bg-blue-50">
                     <div class="font-medium text-gray-700 mb-1">Kegiatan Statistik</div>
                     <div class="text-sm text-gray-800">Kegiatan : <div class="font-bold inline">
@@ -41,8 +41,8 @@
 
             <!-- Box Kanan -->
             <div class="border bg-white p-4 rounded-md shadow-sm">
-                <div class="text-sm font-medium text-gray-700 mb-2">Tahapan berikutnya</div>
-                <div class="text-sm text-indigo-600 mb-4">Penilaian Dokumen (1 April 2024 – 31 April 2024)</div>
+                <div class="text-sm font-medium text-gray-700 mb-2">Penilaian Mandiri</div>
+                <div class="text-sm text-indigo-600 mb-4"></div>
 
                 <div class="bg-indigo-100 p-3 rounded mb-4">
                     <div class="text-sm text-gray-700 font-medium mb-1">Progres Penilaian Mandiri</div>
@@ -127,9 +127,9 @@
                     <thead class="bg-gray-100 text-gray-600">
                         <tr>
                             <th class="py-2 px-4">Domain</th>
-                            <th class="py-2 px-4">Indikator</th>
+                            <th class="py-2 px-4">Aspek</th>
                             {{-- <th class="py-2 px-4">Aspek</th> --}}
-                            <th class="py-2 px-4">Informasi</th>
+                            <th class="py-2 px-4">Nilai</th>
 
                         </tr>
                     </thead>

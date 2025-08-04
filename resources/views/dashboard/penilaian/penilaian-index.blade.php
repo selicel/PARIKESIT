@@ -46,7 +46,6 @@
                             </p>
 
 
-
                         </div>
                         <div class="flex">
                             <ul class="list-disc pl-6 mt-2">

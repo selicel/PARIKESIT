@@ -19,8 +19,9 @@ class PenilaianController extends Controller
     {
         $data['title'] = 'Dashboard';
 
-        // Ambil formulir yang indikatornya semua sudah dinilai (user tertentu bisa disesuaikan)
+        // Ambil formulir yang indikatornya semua sudah dinilai, hanya untuk OPD yang sedang login
         $data['kegiatanPenilaian'] = Formulir::with('domains.aspek.indikator.penilaian')
+            ->where('created_by_id', Auth::user()->id) // Tambahkan filter berdasarkan user yang membuat
             ->whereDoesntHave('domains.aspek.indikator.penilaian', function ($query) {
                 $query->whereNull('nilai');
             })
@@ -28,12 +29,9 @@ class PenilaianController extends Controller
             ->get();
 
         foreach ($data['kegiatanPenilaian'] as $formulir) {
-
             $totalIndikator = 0;
             $terisi = 0;
             foreach ($formulir->domains as $domain) {
-
-                // dd($formulir->id);
                 foreach ($domain->aspek as $aspek) {
                     $totalIndikator += $aspek->indikator->count();
                     foreach ($aspek->indikator as $indikator) {
@@ -45,20 +43,11 @@ class PenilaianController extends Controller
                 }
             }
 
-
-
-
             // Tambahkan data ke instance Formulir
             $formulir->total_indikator = $totalIndikator;
             $formulir->indikator_terisi = $terisi;
             $formulir->persentase = $totalIndikator > 0 ? round(($terisi / $totalIndikator) * 100, 2) : 0;
-
-            // dd($formulir->indikator_terisi);
         }
-
-
-        // dd($formulir);
-
 
         return view('dashboard.penilaian.penilaian-index', $data);
     }
@@ -66,6 +55,11 @@ class PenilaianController extends Controller
 
     public function penilaianTersedia(Formulir $formulir)
     {
+        // Pastikan yang mengakses adalah pembuat formulir atau admin
+        if (Auth::user()->role !== 'admin' && $formulir->created_by_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki akses ke formulir ini');
+        }
+
         $totalIndikator = 0;
         $terisi = 0;
 
@@ -100,15 +94,11 @@ class PenilaianController extends Controller
                             $penilaian->user_id == Auth::id()
                         ) {
                             $totalPersentasePerIndikator += (($penilaian->nilai * $indikator->bobot_indikator) / 100) / $domain->aspek->count();;
-                            // dd($penilaian->nilai, $indikator->bobot_indikator);
                         }
                     }
 
-
-
                     $totalPersentaseDomain += $totalPersentasePerIndikator;
                 }
-                //  dd($domain->aspek->count());
             }
 
             // Simpan data persentase domain berdasarkan ID domain
@@ -119,8 +109,6 @@ class PenilaianController extends Controller
             ];
         }
 
-        // dd($dataPersentasePerDomain);
-
         $persentase = $totalIndikator > 0 ? round(($terisi / $totalIndikator) * 100, 2) : 0;
 
         return view('dashboard.penilaian.penilaian', compact(
@@ -128,7 +116,7 @@ class PenilaianController extends Controller
             'persentase',
             'totalIndikator',
             'terisi',
-            'dataPersentasePerDomain' // <- Tambahkan ke view
+            'dataPersentasePerDomain'
         ));
     }
 
@@ -169,9 +157,13 @@ class PenilaianController extends Controller
 
     public function domainPenilaian(Formulir $formulir)
     {
+        // Pastikan yang mengakses adalah pembuat formulir atau admin
+        if (Auth::user()->role !== 'admin' && $formulir->created_by_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki akses ke formulir ini');
+        }
+
         $formulir->load('domains.aspek.indikator');
 
-        // dd($formulir);
         return view('dashboard.penilaian.domain-penilaian', compact('formulir'));
     }
 
@@ -179,7 +171,10 @@ class PenilaianController extends Controller
 
     public function isiDomain(Formulir $formulir, $nama_domain)
     {
-
+        // Pastikan yang mengakses adalah pembuat formulir atau admin
+        if (Auth::user()->role !== 'admin' && $formulir->created_by_id !== Auth::id()) {
+            abort(403, 'Anda tidak memiliki akses ke formulir ini');
+        }
 
         $domain = Domain::where('nama_domain', $nama_domain)->first();
         $formulir->load('formulir_domains.domain.aspek.indikator.penilaian');

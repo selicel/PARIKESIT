@@ -16,11 +16,25 @@ class PembinaanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Pembinaan::with('file_pembinaan')->latest();
 
-        $pembinaans = Pembinaan::with('file_pembinaan')->latest()->get();
+        // Jika ada parameter pencarian
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('judul_pembinaan', 'like', '%' . $search . '%');
+        }
 
+        // Filter berdasarkan tanggal
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+
+        $pembinaans = $query->get();
 
         return view('dashboard.pembinaan.pembinaan-index', compact('pembinaans'));
     }
@@ -161,6 +175,11 @@ class PembinaanController extends Controller
      */
     public function edit(Pembinaan $pembinaan)
     {
+        // Cek apakah pembinaan dibuat oleh user yang sama
+        if (Auth::user()->role !== 'admin' && $pembinaan->created_by_id !== Auth::user()->id) {
+            return redirect()->route('pembinaan.index')->with('error', 'Anda tidak memiliki izin untuk mengedit pembinaan ini');
+        }
+
         $pembinaan->load('file_pembinaan');
 
         return view('dashboard.pembinaan.pembinaan-edit', compact('pembinaan'));
@@ -174,6 +193,10 @@ class PembinaanController extends Controller
      */
     public function update(Request $request, Pembinaan $pembinaan)
     {
+        // Cek apakah pembinaan dibuat oleh user yang sama
+        if (Auth::user()->role !== 'admin' && $pembinaan->created_by_id !== Auth::user()->id) {
+            return redirect()->route('pembinaan.index')->with('error', 'Anda tidak memiliki izin untuk mengupdate pembinaan ini');
+        }
 
         $pembinaan->load('file_pembinaan');
 
@@ -262,7 +285,6 @@ class PembinaanController extends Controller
         ]);
 
 
-
         return redirect()->route('pembinaan.show',$pembinaan->id)->with('success', 'Pembinaan berhasil diupdate');
 
     }
@@ -272,6 +294,10 @@ class PembinaanController extends Controller
      */
     public function destroy(Pembinaan $pembinaan)
     {
+        // Cek apakah pembinaan dibuat oleh user yang sama
+        if (Auth::user()->role !== 'admin' && $pembinaan->created_by_id !== Auth::user()->id) {
+            return redirect()->route('pembinaan.index')->with('error', 'Anda tidak memiliki izin untuk menghapus pembinaan ini');
+        }
 
         // dd($pembinaan);
         $pembinaan->delete();
@@ -279,5 +305,67 @@ class PembinaanController extends Controller
 
 
         return redirect()->route('pembinaan.index')->with('success', 'Pembinaan Berhasil dihapus');
+    }
+
+    public function downloadAll(Pembinaan $pembinaan)
+    {
+        // Pastikan pembinaan dimuat dengan file-file terkait
+        $pembinaan->load('file_pembinaan');
+
+        // Buat nama file zip
+        $zipFileName = Str::slug($pembinaan->judul_pembinaan) . '-pembinaan-' . now()->format('YmdHis') . '.zip';
+
+        // Inisiasi ZipArchive
+        $zip = new \ZipArchive();
+        $zipPath = storage_path('app/public/pembinaan-zip/' . $zipFileName);
+
+        // Pastikan direktori tersedia
+        if (!file_exists(dirname($zipPath))) {
+            mkdir(dirname($zipPath), 0777, true);
+        }
+
+        // Buka zip
+        if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === TRUE) {
+            // Tambahkan file utama
+            $mainFiles = [
+                'bukti_dukung_undangan_pembinaan' => 'Bukti Dukung Undangan.pdf',
+                'daftar_hadir_pembinaan' => 'Daftar Hadir.pdf',
+                'materi_pembinaan' => 'Materi.pdf',
+                'notula_pembinaan' => 'Notula.pdf'
+            ];
+
+            foreach ($mainFiles as $field => $fileName) {
+                $filePath = $pembinaan->$field;
+                if ($filePath && file_exists(public_path($filePath))) {
+                    $zip->addFile(
+                        public_path($filePath),
+                        $fileName
+                    );
+                }
+            }
+
+            // Tambahkan file media tambahan
+            $mediaFolder = 'Media/';
+            $zip->addEmptyDir($mediaFolder);
+
+            foreach ($pembinaan->file_pembinaan as $index => $media) {
+                $mediaPath = $media->nama_file;
+                if (file_exists(public_path($mediaPath))) {
+                    $zip->addFile(
+                        public_path($mediaPath),
+                        $mediaFolder . ($index + 1) . '.' . pathinfo($mediaPath, PATHINFO_EXTENSION)
+                    );
+                }
+            }
+
+            // Tutup zip
+            $zip->close();
+
+            // Download zip
+            return response()->download($zipPath, $zipFileName)->deleteFileAfterSend(true);
+        }
+
+        // Jika gagal membuat zip
+        return redirect()->back()->with('error', 'Gagal membuat file zip');
     }
 }

@@ -86,6 +86,12 @@ Route::middleware('auth')->group(function () {
     Route::put('dokumentasi/{dokumentasiKegiatan}', [DokumentasiKegiatanController::class, 'update'])->name('dokumentasi.update');
     Route::delete('dokumentasi/{dokumentasiKegiatan}', [DokumentasiKegiatanController::class, 'destroy'])->name('dokumentasi.destroy');
     Route::get('dokumentasi/{dokumentasiKegiatan}', [DokumentasiKegiatanController::class, 'show'])->name('dokumentasi.show');
+    Route::get('dokumentasi/{dokumentasiKegiatan}/download-all', [DokumentasiKegiatanController::class, 'downloadAll'])
+        ->name('dokumentasi.download-all');
+    Route::post('dokumentasi/download-multiple', [DokumentasiKegiatanController::class, 'downloadMultiple'])
+        ->name('dokumentasi.download-multiple');
+    Route::get('dokumentasi/download', [DokumentasiKegiatanController::class, 'downloadPage'])
+        ->name('dokumentasi.download-page');
 
     Route::get('file-dokumentasi/{fileDok}/edit', [FileDokumentasiController::class, 'edit'])->name('fileDok.edit');
     Route::put('file-dokumentasi/{fileDok}', [FileDokumentasiController::class, 'update'])->name('fileDok.update');
@@ -104,6 +110,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('user', UserController::class);
+    Route::get('pembinaan/{pembinaan}/download-all', [PembinaanController::class, 'downloadAll'])
+        ->name('pembinaan.download-all');
 });
 
 require __DIR__ . '/auth.php';

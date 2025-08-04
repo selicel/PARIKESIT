@@ -31,6 +31,7 @@ class Penilaian extends Model
         'dikoreksi_by',
         'evaluasi',
         'tanggal_dikoreksi',
+        // 'created_by_id', // Add this line
     ];
 
     public function indikator()
@@ -64,6 +65,11 @@ class Penilaian extends Model
     {
         return $this->belongsTo(User::class, 'dikoreksi_by');
     }
+
+    // public function created_by()
+    // {
+    //     return $this->belongsTo(User::class, 'created_by_id');
+    // }
 
 
     protected $casts = [
