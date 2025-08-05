@@ -74,7 +74,7 @@
 
                 <!-- Sign In Button -->
                 <div>
-                    <x-primary-button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition duration-300 text-center flex items-center justify-center">
+                    <x-primary-button class="w-full bg-green-600 hover:bg-green-900 text-white py-2 rounded-md transition duration-300 text-center flex items-center justify-center">
                         Masuk
                     </x-primary-button>
                 </div>

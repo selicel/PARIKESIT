@@ -1,6 +1,13 @@
     @extends('dashboard.layout')
     @section('content')
         <div class="card p-8">
+            {{-- Tambahkan bagian pesan error --}}
+            @if(session('error'))
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <strong class="font-bold">Peringatan!</strong>
+                    <span class="block sm:inline">{{ session('error') }}</span>
+                </div>
+            @endif
 
             <div class="flex justify-between mb-4">
                 <h4 class="h4">Penilaian Selesai</h4>
@@ -9,7 +16,12 @@
 
             </div>
 
-
+            @if($penilaianSelesai->isEmpty())
+                <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Informasi!</strong>
+                    <span class="block sm:inline">Belum ada kegiatan penilaian yang tersedia.</span>
+                </div>
+            @endif
 
             @foreach ($penilaianSelesai as $selesai)
                 <div class="bg-white rounded-lg shadow-md p-6 space-y-4 my-3 border border-gray-200">

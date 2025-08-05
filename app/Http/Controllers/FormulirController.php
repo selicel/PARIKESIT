@@ -584,9 +584,35 @@ class FormulirController extends Controller
      */
     public function destroy(Formulir $formulir)
     {
-        $formulir->delete();
+        try {
+            // Log informasi sebelum penghapusan
+            \Log::info('Menghapus Formulir', [
+                'formulir_id' => $formulir->id,
+                'nama_formulir' => $formulir->nama_formulir,
+                'domains_count' => $formulir->domains()->count(),
+                'penilaians_count' => $formulir->penilaians()->count(),
+                'formulir_domains_count' => $formulir->formulir_domains()->count()
+            ]);
 
-        return redirect()->route('formulir.index')->with('success', 'Formulir berhasil dihapus');
+            // Hapus relasi terkait terlebih dahulu
+            $formulir->domains()->detach(); // Lepaskan hubungan domain
+            $formulir->penilaians()->delete(); // Hapus penilaian terkait
+            $formulir->formulir_domains()->delete(); // Hapus formulir domain terkait
+
+            // Kemudian hapus formulir
+            $formulir->delete();
+
+            return redirect()->route('formulir.index')->with('success', 'Formulir berhasil dihapus');
+        } catch (\Exception $e) {
+            // Log error jika terjadi masalah
+            \Log::error('Gagal menghapus Formulir', [
+                'formulir_id' => $formulir->id,
+                'error_message' => $e->getMessage(),
+                'error_trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->back()->with('error', 'Gagal menghapus formulir: ' . $e->getMessage());
+        }
     }
 
 

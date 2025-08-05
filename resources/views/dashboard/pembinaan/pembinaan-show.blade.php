@@ -96,7 +96,7 @@
                         </div>
                         <a href="{{ asset($pembinaan->bukti_dukung_undangan_pembinaan) }}" target="_blank"
                             class="flex items-center text-gray-700 hover:text-black text-sm">
-                            <i class="fas fa-download mr-1"></i> Download
+                            <i class="fas fa-download mr-1"></i> Lihat
                         </a>
                     </div>
 
@@ -111,7 +111,7 @@
                         </div>
                         <a href="{{ asset( $pembinaan->daftar_hadir_pembinaan) }}" target="_blank"
                             class="flex items-center text-gray-700 hover:text-black text-sm">
-                            <i class="fas fa-download mr-1"></i> Download
+                            <i class="fas fa-download mr-1"></i> Lihat
                         </a>
                     </div>
 
@@ -126,7 +126,7 @@
                         </div>
                         <a href="{{ asset( $pembinaan->notula_pembinaan) }}" target="_blank"
                             class="flex items-center text-gray-700 hover:text-black text-sm">
-                            <i class="fas fa-download mr-1"></i> Download
+                            <i class="fas fa-download mr-1"></i> Lihat
                         </a>
                     </div>
 
@@ -141,7 +141,7 @@
                         </div>
                         <a href="{{ asset( $pembinaan->materi_pembinaan) }}" target="_blank"
                             class="flex items-center text-gray-700 hover:text-black text-sm">
-                            <i class="fas fa-download mr-1"></i> Download
+                            <i class="fas fa-download mr-1"></i> Lihat
                         </a>
                     </div>
                 </div>

@@ -49,6 +49,19 @@ class PenilaianController extends Controller
             $formulir->persentase = $totalIndikator > 0 ? round(($terisi / $totalIndikator) * 100, 2) : 0;
         }
 
+        // Tambahkan pengecekan untuk kegiatan penilaian kosong
+        if ($data['kegiatanPenilaian']->isEmpty()) {
+            // Cek apakah user memiliki formulir yang belum dinilai
+            $formulirBelumDinilai = Formulir::where('created_by_id', Auth::user()->id)->exists();
+
+            if (!$formulirBelumDinilai) {
+                // Kirim pesan jika tidak ada formulir sama sekali
+                return view('dashboard.penilaian.penilaian-index', array_merge($data, [
+                    'pesan_info' => 'Silahkan buat kegiatan terlebih dahulu!'
+                ]));
+            }
+        }
+
         return view('dashboard.penilaian.penilaian-index', $data);
     }
 

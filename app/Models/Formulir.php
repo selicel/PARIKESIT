@@ -18,6 +18,23 @@ class Formulir extends Model
         'created_by_id' // Tambahkan created_by_id
     ];
 
+    // Tambahkan atribut yang diatur secara otomatis
+    protected $attributes = [
+        'tanggal_dibuat' => null,
+    ];
+
+    // Tambahkan boot method untuk mengatur tanggal secara otomatis
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (is_null($model->tanggal_dibuat)) {
+                $model->tanggal_dibuat = now();
+            }
+        });
+    }
+
     // protected $dates = [
     //     'tanggal_dibuat'
     // ];

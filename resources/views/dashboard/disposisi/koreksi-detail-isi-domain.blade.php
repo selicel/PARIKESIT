@@ -1,4 +1,7 @@
 @extends('dashboard.layout')
+@php
+use App\Models\Penilaian;
+@endphp
 @section('title', 'Domain Penilaian Kegiatan : ' . $formulir->nama_formulir)
 @section('content')
     <div class="space-y-6">
@@ -104,20 +107,13 @@
                                                 Indikator</th>
                                             <th scope="col"
                                                 class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-bold text-gray-700 uppercase tracking-wider">
-                                                Bobot</th>
-
+                                                Nilai OPD</th>
                                             <th scope="col"
                                                 class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-bold text-gray-700 uppercase tracking-wider">
-                                                Nilai Diisi</th>
+                                                Nilai Walidata</th>
                                             <th scope="col"
                                                 class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-bold text-gray-700 uppercase tracking-wider">
-                                                Nilai Koreksi</th>
-                                            <th scope="col"
-                                                class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-bold text-gray-700 uppercase tracking-wider">
-                                                Nama Pengoreksi</th>
-                                            <th scope="col"
-                                                class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-bold text-gray-700 uppercase tracking-wider">
-                                                Status</th>
+                                                Nilai BPS</th>
                                             <th scope="col"
                                                 class="w-1/3 px-6 py-3 text-left text-xs leading-4 font-bold text-gray-700 uppercase tracking-wider">
                                                 Action</th>
@@ -126,7 +122,6 @@
                                     <tbody class="bg-white">
                                         @foreach ($aspek->indikator as $indikator)
                                             @php
-
                                                 $domainDibuka = $indikator->aspek->domain->formulirs->firstWhere(
                                                     'id',
                                                     $formulir->id,
@@ -135,10 +130,31 @@
                                                     ->where('user_id', $opd->id)
                                                     ->where('formulir_id', $domainDibuka->id)
                                                     ->first();
+
+                                                // Cari penilaian OPD terlebih dahulu
+                                                $penilaianOPD = Penilaian::where('user_id', $opd->id)
+                                                    ->where('formulir_id', $domainDibuka->id)
+                                                    ->where('indikator_id', $indikator->id)
+                                                    ->whereHas('user', function($query) {
+                                                        $query->where('role', 'opd');
+                                                    })
+                                                    ->first();
+
+                                                // Cari penilaian Walidata
+                                                $penilaianWalidata = Penilaian::where('user_id', $opd->id)
+                                                    ->where('formulir_id', $domainDibuka->id)
+                                                    ->where('indikator_id', $indikator->id)
+                                                    ->whereNotNull('nilai_diupdate')
+                                                    ->first();
+
+                                                // Cari penilaian BPS (Admin)
+                                                $penilaianBPS = Penilaian::where('user_id', $opd->id)
+                                                    ->where('formulir_id', $domainDibuka->id)
+                                                    ->where('indikator_id', $indikator->id)
+                                                    ->whereNotNull('nilai_koreksi')
+                                                    ->first();
                                             @endphp
-
-
-                                            <tr class="{{ $penilaianUser != null ? 'bg-green-300' : '' }}">
+                                            <tr class="{{ $penilaianUser != null ?  : '' }}">
                                                 <td class="px-6 py-4 border-b border-gray-200 break-all truncate max-w-20"
                                                     title="{{ $indikator->nama_indikator }}">
                                                     <p class="text-gray-800 font-semibold text-md ">
@@ -146,45 +162,25 @@
                                                     </p>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                                    <p class="text-gray-800 font-bold">{{ $indikator->bobot_indikator }}
-                                                    </p>
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-
-
-                                                    @if ($penilaianUser && $domainDibuka->id == $formulir->id)
-                                                        <span class="text-black rounded text-md font-bold">
-                                                            {{ $penilaianUser->nilai }}
-                                                        </span>
-                                                    @else
-                                                        <span class="text-red-500">- </span>
-                                                    @endif
+                                                    <span class="text-black rounded text-md font-bold">
+                                                        {{ $penilaianOPD ? ($penilaianOPD->nilai ?? '-') : '-' }}
+                                                    </span>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                                     <span class="text-black rounded text-md font-bold">
-                                                        {{ $penilaianUser->nilai_koreksi ?? '-' }}
+                                                        {{ $penilaianWalidata ? ($penilaianWalidata->nilai_diupdate ?? '-') : '-' }}
                                                     </span>
                                                 </td>
-                                                <td>
-
-                                                </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                                    @if ($penilaianUser)
-                                                        <span
-                                                            class="bg-blue-500 p-3 text-white rounded text-xs font-semibold">Sudah
-                                                            Diisi</span>
-                                                    @else
-                                                        <span
-                                                            class="bg-red-500 p-3 text-white rounded text-xs font-semibold">Belum
-                                                            diisi</span>
-                                                    @endif
+                                                    <span class="text-black rounded text-md font-bold">
+                                                        {{ $penilaianBPS ? ($penilaianBPS->nilai_koreksi ?? '-') : '-' }}
+                                                    </span>
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                                     <a href="{{ route('disposisi.koreksi.indikator.beri-koreksi', [$opd->name, $formulir->nama_formulir, $domain->nama_domain, $aspek->nama_aspek, $indikator->nama_indikator]) }}"
                                                         class="text-blue-500 hover:text-blue-700 font-normal text-sm">
                                                         <i
                                                             class="fad fa-external-link-alt text-md mr-1 bg-indigo-500 text-white p-4 rounded ml-2"></i>
-
                                                     </a>
                                                 </td>
                                             </tr>
