@@ -175,8 +175,13 @@ class PembinaanController extends Controller
      */
     public function edit(Pembinaan $pembinaan)
     {
+        // Jika admin, hanya bisa melihat
+        if (Auth::user()->role === 'admin') {
+            return redirect()->route('pembinaan.show', $pembinaan->id);
+        }
+
         // Cek apakah pembinaan dibuat oleh user yang sama
-        if (Auth::user()->role !== 'admin' && $pembinaan->created_by_id !== Auth::user()->id) {
+        if ($pembinaan->created_by_id !== Auth::user()->id) {
             return redirect()->route('pembinaan.index')->with('error', 'Anda tidak memiliki izin untuk mengedit pembinaan ini');
         }
 
@@ -193,8 +198,13 @@ class PembinaanController extends Controller
      */
     public function update(Request $request, Pembinaan $pembinaan)
     {
+        // Jika admin, tolak update
+        if (Auth::user()->role === 'admin') {
+            return redirect()->route('pembinaan.show', $pembinaan->id)->with('error', 'Admin tidak memiliki izin untuk mengupdate pembinaan');
+        }
+
         // Cek apakah pembinaan dibuat oleh user yang sama
-        if (Auth::user()->role !== 'admin' && $pembinaan->created_by_id !== Auth::user()->id) {
+        if ($pembinaan->created_by_id !== Auth::user()->id) {
             return redirect()->route('pembinaan.index')->with('error', 'Anda tidak memiliki izin untuk mengupdate pembinaan ini');
         }
 
@@ -294,8 +304,13 @@ class PembinaanController extends Controller
      */
     public function destroy(Pembinaan $pembinaan)
     {
+        // Jika admin, tolak penghapusan
+        if (Auth::user()->role === 'admin') {
+            return redirect()->route('pembinaan.index')->with('error', 'Admin tidak memiliki izin untuk menghapus pembinaan');
+        }
+
         // Cek apakah pembinaan dibuat oleh user yang sama
-        if (Auth::user()->role !== 'admin' && $pembinaan->created_by_id !== Auth::user()->id) {
+        if ($pembinaan->created_by_id !== Auth::user()->id) {
             return redirect()->route('pembinaan.index')->with('error', 'Anda tidak memiliki izin untuk menghapus pembinaan ini');
         }
 

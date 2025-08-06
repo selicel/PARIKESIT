@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FilePembinaan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FilePembinaanController extends Controller
 {
@@ -31,6 +32,27 @@ class FilePembinaanController extends Controller
 
     public function destroy(FilePembinaan $filePemb)
     {
+        // Pastikan file pembinaan memiliki relasi pembinaan
+        if (!$filePemb->pembinaan) {
+            return redirect()->back()->with('error', 'File pembinaan tidak valid');
+        }
+
+        // Jika admin, tolak penghapusan
+        if (Auth::user()->role === 'admin') {
+            return redirect()->back()->with('error', 'Admin tidak memiliki izin untuk menghapus media pembinaan');
+        }
+
+        // Pastikan file hanya bisa dihapus oleh pembuat pembinaan
+        $pembinaan = $filePemb->pembinaan;
+        if ($pembinaan->created_by_id !== Auth::user()->id) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk menghapus media pembinaan ini');
+        }
+
+        // Hapus file fisik jika ada
+        if (file_exists(public_path($filePemb->nama_file))) {
+            unlink(public_path($filePemb->nama_file));
+        }
+
         $filePemb->delete();
         return redirect()->back()->with('success', 'File berhasil dihapus');
     }

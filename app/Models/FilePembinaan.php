@@ -17,7 +17,7 @@ protected $fillable =
     ];
 
 
-    public function dokumentasi()
+    public function pembinaan()
     {
         return $this->belongsTo(Pembinaan::class);
     }
