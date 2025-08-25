@@ -34,11 +34,6 @@
                             <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full font-semibold">Aktif</span>
                             <span class="text-xs px-2 py-1 bg-red-100 text-red-700 rounded-full font-semibold">Tinggi</span>
                         </div> --}}
-                            <p class="text-sm text-gray-600 mt-2">
-                                Formulir untuk evaluasi penerapan sistem statistik sektoral pada semester pertama tahun
-                                2025.
-                                Mencakup 5 domain dengan 19 aspek penilaian.
-                            </p>
                             <div class="text-xs text-gray-500 mt-1 space-x-2">
                                 <span class="inline-block"><i class="fas fa-tag mr-1"></i>Penilaian Mandiri</span>
                                 <span class="inline-block"><i class="fas fa-user-shield mr-1"></i>Admin BPS</span>

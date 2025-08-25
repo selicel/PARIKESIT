@@ -1,29 +1,29 @@
 @extends('dashboard.layout')
-@section('title', 'Edit Pembinaan')
+@section('title', 'Edit Kegiatan')
 {{-- <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" /> --}}
 
 @section('content')
     <div class="card mt-6 p-8">
-        <h4 class="h4 mb-4">Update Pembinaan</h4>
+        <h4 class="h4 mb-4">Update Kegiatan</h4>
 
         <form action="{{ route('pembinaan.update', $pembinaan->id) }}" method="POST" enctype="multipart/form-data">
             @method('PUT')
             @csrf
 
             <div class="flex flex-col my-4">
-                <label class="font-semibold">Judul Pembinaan</label>
+                <label class="font-semibold">Nama Kegiatan</label>
                 <input type="text"
                     class="p-2 rounded border border-gray-400 shadow focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 focus:bg-gray-200"
-                    name="judul_pembinaan" value="{{ $pembinaan->judul_pembinaan }}" required>
+                    name="judul_pembinaan" value="{{ $pembinaan->judul_pembinaan }}" required readonly>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-4">
                 <div class="col-span-1 border border-gray-300 bg-white p-4 rounded-md shadow-sm mt-4">
-                    <div class="text-md font-bold text-gray-800 mb-4">PDF Undangan</div>
+                    <div class="text-md font-bold text-gray-800 mb-4">Undangan</div>
                     <div class="flex items-center justify-between p-4 border rounded-md bg-white shadow-sm">
                         <div class="flex items-center">
                             <i class="fas fa-envelope text-blue-500 text-xl mr-3"></i>
                             <div>
-                                <div class="font-semibold text-sm text-gray-800">PDF Undangan</div>
+                                <div class="font-semibold text-sm text-gray-800">Undangan</div>
                                 {{-- <div class="text-xs text-gray-600 truncate">undangan_penilaian_mandiri.pdf</div> --}}
                             </div>
                         </div>
@@ -39,12 +39,12 @@
                 </div>
 
                 <div class="col-span-1 border border-gray-300 bg-white p-4 rounded-md shadow-sm mt-4">
-                    <div class="text-md font-bold text-gray-800 mb-4">PDF Daftar Hadir</div>
+                    <div class="text-md font-bold text-gray-800 mb-4">Daftar Hadir</div>
                     <div class="flex items-center justify-between p-4 border rounded-md bg-white shadow-sm">
                         <div class="flex items-center">
                             <i class="fas fa-users text-green-600 text-xl mr-3"></i>
                             <div>
-                                <div class="font-semibold text-sm text-gray-800">PDF Daftar Hadir</div>
+                                <div class="font-semibold text-sm text-gray-800">Daftar Hadir</div>
                                 {{-- <div class="text-xs text-gray-600 truncate">daftar_hadir_april.pdf</div> --}}
                             </div>
                         </div>
@@ -60,12 +60,12 @@
                 </div>
 
                 <div class="col-span-1 border border-gray-300 bg-white p-4 rounded-md shadow-sm mt-4">
-                    <div class="text-md font-bold text-gray-800 mb-4">PDF Materi</div>
+                    <div class="text-md font-bold text-gray-800 mb-4">Materi</div>
                     <div class="flex items-center justify-between p-4 border rounded-md bg-white shadow-sm">
                         <div class="flex items-center">
                             <i class="fas fa-file-alt text-orange-500 text-xl mr-3"></i>
                             <div>
-                                <div class="font-semibold text-sm text-gray-800">PDF Materi</div>
+                                <div class="font-semibold text-sm text-gray-800">Materi</div>
                                 {{-- <div class="text-xs text-gray-600 truncate">notula_rapat_evaluasi.pdf</div> --}}
                             </div>
                         </div>
@@ -81,12 +81,12 @@
                 </div>
 
                 <div class="col-span-1 border border-gray-300 bg-white p-4 rounded-md shadow-sm mt-4">
-                    <div class="text-md font-bold text-gray-800 mb-4">PDF Notula</div>
+                    <div class="text-md font-bold text-gray-800 mb-4">Notula</div>
                     <div class="flex items-center justify-between p-4 border rounded-md bg-white shadow-sm">
                         <div class="flex items-center">
                             <i class="fas fa-file-alt text-gray-800 text-xl mr-3"></i>
                             <div>
-                                <div class="font-semibold text-sm text-gray-800">PDF Notula</div>
+                                <div class="font-semibold text-sm text-gray-800">Notula</div>
                                 {{-- <div class="text-xs text-gray-600 truncate">notula_rapat_evaluasi.pdf</div> --}}
                             </div>
                         </div>

@@ -573,7 +573,8 @@ class FormulirController extends Controller
 
 
         $formulir->update([
-            'nama_formulir' => $request->nama_formulir
+            'nama_formulir' => $request->nama_formulir,
+            'created_by_id' => Auth::id() // Tambahkan created_by_id
         ]);
 
         return redirect()->back()->with('success', 'Formulir berhasil Diperbarui');

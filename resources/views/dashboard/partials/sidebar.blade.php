@@ -40,6 +40,13 @@
 
 
         @if (Auth::user()->role == 'opd')
+        <a href="{{ route('formulir.index') }}"
+            class="py-1 px-2 mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 {{ (request()->routeIs('formulir.*') && !request()->routeIs('formulir.penilaianTersedia') && !request()->routeIs('formulir.domain-penilaian') && !request()->routeIs('formulir.isi-domain') && !request()->routeIs('formulir.penilaianAspek')) ? 'text-teal-600 bg-gray-300 border-1 border-gray-500 rounded-lg shadow' : '' }}">
+            <i class="fad fa-folder text-xs mr-2"></i>
+            Kegiatan Penilaian
+        </a>
+    @endif
+        @if (Auth::user()->role == 'opd')
             <!-- link -->
             <a href="{{ route('penilaian.index') }}"
                 class="py-1 px-2 mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 {{ (request()->routeIs('penilaian.*') || request()->routeIs('formulir.penilaianTersedia') || request()->routeIs('formulir.domain-penilaian') || request()->routeIs('formulir.isi-domain') || request()->routeIs('formulir.penilaianAspek')) ? 'text-teal-600 bg-gray-300 border-1 border-gray-500 rounded-lg shadow' : '' }}">
@@ -47,13 +54,7 @@
                 Penilaian Mandiri
             </a>
         @endif
-        @if (Auth::user()->role == 'opd')
-            <a href="{{ route('formulir.index') }}"
-                class="py-1 px-2 mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 {{ (request()->routeIs('formulir.*') && !request()->routeIs('formulir.penilaianTersedia') && !request()->routeIs('formulir.domain-penilaian') && !request()->routeIs('formulir.isi-domain') && !request()->routeIs('formulir.penilaianAspek')) ? 'text-teal-600 bg-gray-300 border-1 border-gray-500 rounded-lg shadow' : '' }}">
-                <i class="fad fa-folder text-xs mr-2"></i>
-                Kegiatan Penilaian
-            </a>
-        @endif
+
 
             {{-- @if (Auth::user()->role == 'admin' || Auth::user()->role == 'walidata') --}}
             <a href="{{ route('disposisi.penilaian.tersedia') }}"
@@ -67,19 +68,19 @@
 
 
 
-        <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">Informasi</p>
+        <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">Dokumentasi</p>
 
         <a href="{{ route('pembinaan.index') }}"
             class="py-1 px-2 mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 {{ (request()->routeIs('pembinaan.*')) ? 'text-teal-600 bg-gray-300 border-1 border-gray-500 rounded-lg shadow' : '' }}">
             <i class="fad fa-whistle text-xs mr-2"></i>
-            Pembinaan
+            Kegiatan
         </a>
         <!-- end link -->
         @if (Auth::user()->role == 'admin')
             <a href="{{ route('dokumentasi.index') }}"
                 class="py-1 px-2 mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 {{ (request()->routeIs('dokumentasi.*')) ? 'text-teal-600 bg-gray-300 border-1 border-gray-500 rounded-lg shadow' : '' }}">
                 <i class="fad fa-camera text-xs mr-2"></i>
-                Dokumentasi
+                Pembinaan
             </a>
         @endif
 

@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('formulirs', function (Blueprint $table) {
-            //
+            $table->unsignedBigInteger('created_by_id')->nullable();
+            $table->foreign('created_by_id')->references('id')->on('users')->onDelete('set null');
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('formulirs', function (Blueprint $table) {
-            //
+            $table->dropForeign(['created_by_id']);
+            $table->dropColumn('created_by_id');
         });
     }
 };

@@ -1,5 +1,5 @@
 @extends('dashboard.layout')
-@section('title', 'Pembinaan')
+@section('title', 'Kegiatan')
 @section('content')
 @php
     use Illuminate\Support\Facades\Auth;
@@ -7,7 +7,7 @@
     <div class="card p-8">
 
         <div class="flex justify-between mb-4">
-            <h4 class="h4">Pembinaan</h4>
+            <h4 class="h4">Kegiatan</h4>
 
             @php
                 $user = Auth::user();
@@ -18,7 +18,7 @@
                 <div class="">
                     <a href="{{ route('pembinaan.create') }}"
                         class="p-2 px-4 bg-blue-500 text-white hover:bg-blue-700 hover:text-white ease-in-out transition duration-100 border rounded-md flex items-center">
-                        <i class="fad fa-plus mr-2"></i> Tambah Pembinaan
+                        <i class="fad fa-plus mr-2"></i> Tambah Kegiatan
                     </a>
                 </div>
             @endif
@@ -32,7 +32,7 @@
                         <i class="fas fa-search text-lg"></i>
                     </span>
                 </div>
-                <input type="text" id="searchPembinaan" placeholder="Cari pembinaan..."
+                <input type="text" id="searchPembinaan" placeholder="Cari Kegiatan..."
                     class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition duration-200 ease-in-out hover:border-blue-300">
                 <span id="clearSearchIcon" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer hover:text-red-500 hidden">
                     <i class="fas fa-times text-lg"></i>
@@ -98,7 +98,7 @@
                 </div>
             @empty
                 <div id="noPembinaan" class="col-span-full text-center py-10 bg-gray-100 rounded-lg">
-                    <p class="text-gray-600 text-lg">Belum ada pembinaan</p>
+                    <p class="text-gray-600 text-lg">Belum ada kegiatan</p>
                 </div>
             @endforelse
         </div>
@@ -144,7 +144,7 @@
                 if (visibleItems === 0) {
                     noPembinaan.html(`
                         <p class="text-gray-600 text-lg">
-                            Tidak ada pembinaan yang cocok dengan pencarian "${searchInput.val()}"
+                            Tidak ada kegiatan yang cocok dengan pencarian "${searchInput.val()}"
                         </p>
                     `).show();
                 } else {

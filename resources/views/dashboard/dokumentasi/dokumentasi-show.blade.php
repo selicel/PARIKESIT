@@ -1,14 +1,14 @@
 @extends('dashboard.layout')
 <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
 
-@section('title', 'Dokumentasi Kegiatan ' . $dokumentasiKegiatan->nama_formulir)
+@section('title', 'Dokumentasi Pembinaan ' . $dokumentasiKegiatan->nama_formulir)
 
 @section('content')
     <div class="space-y-6">
 
         {{-- Judul --}}
         <div class="flex justify-between items-center">
-            <h4 class="text-xl font-semibold text-gray-700">DOKUMENTASI</h4>
+            <h4 class="text-xl font-semibold text-gray-700">PEMBINAAN</h4>
         </div>
 
 
@@ -16,9 +16,9 @@
         <nav class="bg-white p-4 border-2 rounded-md w-full mb-4">
             <ol class="list-reset flex text-grey-dark">
 
-                <li><a href="{{ route('dokumentasi.index') }}" class="text-blue-600 hover:underline">Dokumentasi</a></li>
+                <li><a href="{{ route('dokumentasi.index') }}" class="text-blue-600 hover:underline">Pembinaan</a></li>
                 <li><span class="mx-2">&gt;</span></li>
-                <li class="text-gray-700">Kegiatan : {{ $dokumentasiKegiatan->judul_dokumentasi }}</li>
+                <li class="text-gray-700">Nama Pembinaan : {{ $dokumentasiKegiatan->judul_dokumentasi }}</li>
             </ol>
         </nav>
 
@@ -89,13 +89,13 @@
                         <div class="flex items-center">
                             <i class="fas fa-envelope text-blue-500 text-xl mr-3"></i>
                             <div>
-                                <div class="font-semibold text-sm text-gray-800">PDF Undangan</div>
+                                <div class="font-semibold text-sm text-gray-800">Undangan</div>
                                 {{-- <div class="text-xs text-gray-600 truncate">undangan_penilaian_mandiri.pdf</div> --}}
                             </div>
                         </div>
                         <a href="{{ asset($dokumentasiKegiatan->bukti_dukung_undangan_dokumentasi) }}" target="_blank"
                             class="flex items-center text-gray-700 hover:text-black text-sm">
-                            <i class="fas fa-download mr-1"></i> Download
+                            <i class="fas fa-eye mr-1"></i> Lihat
                         </a>
                     </div>
 
@@ -104,13 +104,13 @@
                         <div class="flex items-center">
                             <i class="fas fa-users text-green-600 text-xl mr-3"></i>
                             <div>
-                                <div class="font-semibold text-sm text-gray-800">PDF Daftar Hadir</div>
+                                <div class="font-semibold text-sm text-gray-800">Daftar Hadir</div>
                                 {{-- <div class="text-xs text-gray-600 truncate">daftar_hadir_april.pdf</div> --}}
                             </div>
                         </div>
                         <a href="{{ asset( $dokumentasiKegiatan->daftar_hadir_dokumentasi) }}" target="_blank"
                             class="flex items-center text-gray-700 hover:text-black text-sm">
-                            <i class="fas fa-download mr-1"></i> Download
+                            <i class="fas fa-eye mr-1"></i> Lihat
                         </a>
                     </div>
 
@@ -119,13 +119,13 @@
                         <div class="flex items-center">
                             <i class="fas fa-file-alt text-orange-500 text-xl mr-3"></i>
                             <div>
-                                <div class="font-semibold text-sm text-gray-800">PDF Notula</div>
+                                <div class="font-semibold text-sm text-gray-800">Notula</div>
                                 {{-- <div class="text-xs text-gray-600 truncate">notula_rapat_evaluasi.pdf</div> --}}
                             </div>
                         </div>
                         <a href="{{ asset( $dokumentasiKegiatan->notula_dokumentasi) }}" target="_blank"
                             class="flex items-center text-gray-700 hover:text-black text-sm">
-                            <i class="fas fa-download mr-1"></i> Download
+                            <i class="fas fa-eye mr-1"></i> Lihat
                         </a>
                     </div>
 
@@ -135,13 +135,13 @@
                         <div class="flex items-center">
                             <i class="fas fa-file-alt text-gray-800 text-xl mr-3"></i>
                             <div>
-                                <div class="font-semibold text-sm text-gray-800">PDF Materi</div>
+                                <div class="font-semibold text-sm text-gray-800">Materi</div>
                                 {{-- <div class="text-xs text-gray-600 truncate">notula_rapat_evaluasi.pdf</div> --}}
                             </div>
                         </div>
                         <a href="{{ asset( $dokumentasiKegiatan->materi_dokumentasi) }}" target="_blank"
                             class="flex items-center text-gray-700 hover:text-black text-sm">
-                            <i class="fas fa-download mr-1"></i> Download
+                            <i class="fas fa-eye mr-1"></i> Lihat
                         </a>
                     </div>
 
@@ -227,12 +227,12 @@
 
             Swal.fire({
                 title: 'Apakah kamu yakin?',
-                text: "Anda tidak dapat mengembalikan dokumentasi ini!",
+                text: "Anda tidak dapat mengembalikan dokumentasi pembinaan ini!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus media dokumentasi ini!'
+                confirmButtonText: 'Ya, hapus media dokumentasi pembinaan ini!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     e.preventDefault();
@@ -249,12 +249,12 @@
 
             Swal.fire({
                 title: 'Apakah kamu yakin?',
-                text: "Anda tidak dapat mengembalikan data dokumentasi ini!",
+                text: "Anda tidak dapat mengembalikan data dokumentasi pembinaan ini!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus data dokumentasi ini!'
+                confirmButtonText: 'Ya, hapus data dokumentasi pembinaan ini!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     e.preventDefault();

@@ -47,8 +47,8 @@
                         <a href="{{ route('pembinaan.index') }}"
                             class="bg-green-100 border-2 border-green-200 rounded-2xl p-6 hover:bg-green-200 transition transform hover:scale-105 flex flex-col items-center justify-center space-y-4 text-center shadow-md">
                             <i class="fad fa-whistle text-green-600 text-4xl"></i>
-                            <span class="text-base font-bold text-green-900">Pembinaan</span>
-                            <p class="text-xs text-green-700 opacity-75">Kelola program pembinaan</p>
+                            <span class="text-base font-bold text-green-900">Kegiatan</span>
+                            <p class="text-xs text-green-700 opacity-75">Kelola kegiatan yang telah dilaksanakan</p>
                         </a>
                     @elseif (auth()->user()->role == 'walidata')
                         <a href="{{ route('disposisi.penilaian.tersedia') }}"
@@ -60,8 +60,8 @@
                         <a href="{{ route('pembinaan.index') }}"
                             class="bg-green-100 border-2 border-green-200 rounded-2xl p-6 hover:bg-green-200 transition transform hover:scale-105 flex flex-col items-center justify-center space-y-4 text-center shadow-md">
                             <i class="fad fa-whistle text-green-600 text-4xl"></i>
-                            <span class="text-base font-bold text-green-900">Pembinaan</span>
-                            <p class="text-xs text-green-700 opacity-75">Kelola program pembinaan</p>
+                            <span class="text-base font-bold text-green-900">Kegiatan</span>
+                            <p class="text-xs text-green-700 opacity-75">Kelola kegiatan yang telah dilaksanakan</p>
                         </a>
                     @elseif (auth()->user()->role == 'admin')
                         <a href="{{ route('disposisi.penilaian.tersedia') }}"
@@ -73,8 +73,8 @@
                         <a href="{{ route('dokumentasi.index') }}"
                             class="bg-purple-100 border-2 border-purple-200 rounded-2xl p-6 hover:bg-purple-200 transition transform hover:scale-105 flex flex-col items-center justify-center space-y-4 text-center shadow-md">
                             <i class="fad fa-camera text-purple-600 text-4xl"></i>
-                            <span class="text-base font-bold text-purple-900">Dokumentasi</span>
-                            <p class="text-xs text-purple-700 opacity-75">Kelola dokumentasi kegiatan</p>
+                            <span class="text-base font-bold text-purple-900">Pembinaan</span>
+                            <p class="text-xs text-purple-700 opacity-75">Kelola dokumentasi kegiatan pembinaan</p>
                         </a>
                     @endif
                 </div>

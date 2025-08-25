@@ -1,31 +1,31 @@
 @extends('dashboard.layout')
-@section('title', 'Tambah Pembinaan')
+@section('title', 'Tambah Kegiatan')
 {{-- <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" /> --}}
 
 @section('content')
     <div class="card mt-6 p-8">
-        <h4 class="h4 mb-4">Tambah Pembinaan</h4>
+        <h4 class="h4 mb-4">Tambah Kegiatan</h4>
 
         <form action="{{ route('pembinaan.store') }}" method="POST" enctype="multipart/form-data">
 
             @csrf
 
             <div class="flex flex-col my-4">
-                <label class="font-semibold">Judul Pembinaan</label>
+                <label class="font-semibold">Nama Kegiatan</label>
                 <input type="text"
                     class="p-2 rounded border border-gray-400 shadow focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 focus:bg-gray-200"
                     name="judul_pembinaan" value="{{ old('judul _pembinaan') }}" required>
             </div>
             <div class="flex flex-col my-4">
-                <label class="font-semibold">Bukti Dukung Undangan Pembinaan</label>
+                <label class="font-semibold">Undangan</label>
                 <input type="file"
                     class="p-2 rounded border border-gray-400 shadow focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 focus:bg-gray-200"
                     name="bukti_dukung_undangan" required accept=".pdf">
-                <p class="text-xs font-semibold text-red-600 mt-2">*File bukti dukung undangan harus pdf</p>
+                <p class="text-xs font-semibold text-red-600 mt-2">*File undangan harus pdf</p>
             </div>
 
             <div class="flex flex-col my-4">
-                <label class="font-semibold">Daftar Hadir Pembinaan</label>
+                <label class="font-semibold">Daftar Hadir</label>
                 <input type="file"
                     class="p-2 rounded border border-gray-400 shadow focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 focus:bg-gray-200"
                     name="daftar_hadir" required accept=".pdf">
@@ -33,7 +33,7 @@
             </div>
 
             <div class="flex flex-col my-4">
-                <label class="font-semibold">Materi Pembinaan</label>
+                <label class="font-semibold">Materi</label>
                 <input type="file"
                     class="p-2 rounded border border-gray-400 shadow focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 focus:bg-gray-200"
                     name="materi" required accept=".pdf">
@@ -41,7 +41,7 @@
             </div>
 
             <div class="flex flex-col my-4">
-                <label class="font-semibold">Notula Pembinaan</label>
+                <label class="font-semibold">Notula</label>
                 <input type="file"
                     class="p-2 rounded border border-gray-400 shadow focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 focus:bg-gray-200"
                     name="notula" required accept=".pdf">

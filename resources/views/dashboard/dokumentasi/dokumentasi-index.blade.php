@@ -1,12 +1,12 @@
 @extends('dashboard.layout')
-@section('title', 'Dokumentasi')
+@section('title', 'Pembinaan')
 @section('content')
     @php
         use Illuminate\Support\Facades\Auth;
     @endphp
     <div class="card p-8">
         <div class="flex justify-between mb-4">
-            <h4 class="h4">Dokumentasi</h4>
+                <h4 class="h4">Pembinaan</h4>
 
             @php
                 $user = Auth::user();
@@ -17,7 +17,7 @@
                 <div class="">
                     <a href="{{ route('dokumentasi.create') }}"
                         class="p-2 px-4 bg-blue-500 text-white hover:bg-blue-700 hover:text-white ease-in-out transition duration-100 border rounded-md flex items-center">
-                        <i class="fad fa-plus mr-2"></i> Tambah Dokumentasi</a>
+                        <i class="fad fa-plus mr-2"></i> Tambah Pembinaan</a>
                 </div>
             @endif
         </div>
@@ -98,9 +98,9 @@
                             @endphp
                             <b>
                                 @if ($countDok > 0)
-                                    Dokumentasi tersedia
+                                    Pembinaan tersedia
                                 @else
-                                    Belum ada dokumentasi
+                                    Belum ada pembinaan
                                 @endif
                             </b>
                         </p>
@@ -132,9 +132,9 @@
                         @endphp
                         <b>
                             @if ($countDok > 0)
-                                Dokumentasi tersedia
+                                Pembinaan tersedia
                             @else
-                                Belum ada dokumentasi
+                                Belum ada pembinaan
                             @endif
                         </b>
                     </p>
@@ -186,7 +186,7 @@
             if (visibleItems === 0) {
                 noDokumentasi.html(`
                     <p class="text-gray-600 text-lg">
-                        Tidak ada dokumentasi yang cocok dengan pencarian "${searchInput.val()}"
+                        Tidak ada dokumentasi pembinaan yang cocok dengan pencarian "${searchInput.val()}"
                     </p>
                 `).show();
             } else {
