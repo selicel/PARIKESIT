@@ -2,7 +2,7 @@
     $role = auth()->user()->role; // pastikan variabel ini sesuai dengan sistem autentikasi kamu
 @endphp
 
-<div class="md:fixed md:w-full md:top-0 md:z-20 flex flex-row flex-wrap items-center p-6 border-b border-gray-300
+<div class="md:fixed md:w-full md:top-0 md:z-20 flex flex-row flex-wrap items-center border-b border-gray-300 p-1 m-0
     @if ($role === 'admin' || $role === 'opd' || $role === 'walidata')
         bg-blue-200
     {{-- @elseif ($role === 'walidata')
@@ -15,8 +15,8 @@
 ">
 
 <!-- logo -->
-<div class="flex-none w-56 flex flex-row items-center">
-    <img src="{{asset('img/logo2.png')}}" class="w-20 h-auto flex-none">
+<div class="flex-none w-64 flex flex-row items-center m-0 p-0">
+    <img src="{{ asset('img/333.png') }}" class="w-56 h-auto flex-none m-2 p-1">
     {{-- <strong class="capitalize ml-1 flex-1">Parikesit</strong> --}}
 
     <button id="sliderBtn" class="flex-none text-right text-gray-900 hidden md:block">
