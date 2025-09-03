@@ -59,13 +59,13 @@ use App\Models\Penilaian;
                             <td class="px-3 py-1 border-t border-b border-gray-300 dark:border-gray-600 text-uppercase">
                                 {{ $opd->name }}</td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <td
                                 class="px-3 py-1 border-t border-b text-gray-100 border-gray-300 bg-gray-900 dark:border-gray-600 w-1/6">
                                 Jabatan</td>
                             <td class="px-3 py-1 border-t border-b border-gray-300 dark:border-gray-600 text-uppercase">
                                 {{ $opd->role ?? '-' }}</td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <td
                                 class="px-3 py-1 border-t border-b text-gray-100 border-gray-300 bg-gray-900 dark:border-gray-600 w-1/6">
@@ -319,7 +319,7 @@ use App\Models\Penilaian;
                 @else
                     <div class="text-center py-10 border-2 border-red-300 bg-red-50 shadow-md rounded-md mt-10">
                         <p class="text-2xl text-red-900 font-semibold">Belum Ada Penilaian</p>
-                        <p class="font-bold text-red-700">Silakan lakukan penilaian terlebih dahulu</p>
+                        <p class="font-bold text-red-700">Silakan tunggu penilaian </p>
                     </div>
                 @endif
 

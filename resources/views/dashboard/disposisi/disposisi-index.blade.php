@@ -35,8 +35,8 @@
                             <span class="text-xs px-2 py-1 bg-red-100 text-red-700 rounded-full font-semibold">Tinggi</span>
                         </div> --}}
                             <div class="text-xs text-gray-500 mt-1 space-x-2">
-                                <span class="inline-block"><i class="fas fa-tag mr-1"></i>Penilaian Mandiri</span>
-                                <span class="inline-block"><i class="fas fa-user-shield mr-1"></i>Admin BPS</span>
+                                {{-- <span class="inline-block"><i class="fas fa-tag mr-1"></i>Penilaian Mandiri</span>
+                                <span class="inline-block"><i class="fas fa-user-shield mr-1"></i>Admin BPS</span> --}}
                                 {{-- <span class="inline-block"><i class="fas fa-calendar-alt mr-1"></i>Deadline:
                                     31/3/2025</span> --}}
                             </div>

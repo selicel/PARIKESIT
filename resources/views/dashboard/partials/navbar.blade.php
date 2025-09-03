@@ -15,8 +15,8 @@
 ">
 
 <!-- logo -->
-<div class="flex-none w-64 flex flex-row items-center m-0 p-0">
-    <img src="{{ asset('img/333.png') }}" class="w-56 h-auto flex-none m-2 p-1">
+<div class="flex-none w-56 flex flex-row items-center m-0 p-0">
+    <img src="{{ asset('img/333.png') }}" class="w-50 h-auto flex-none m-2 p-0.5">
     {{-- <strong class="capitalize ml-1 flex-1">Parikesit</strong> --}}
 
     <button id="sliderBtn" class="flex-none text-right text-gray-900 hidden md:block">
