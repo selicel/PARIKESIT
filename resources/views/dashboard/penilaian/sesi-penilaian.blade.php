@@ -95,48 +95,44 @@
 
 
                         <div class="space-y-2 text-sm">
-                            <label for="level1_update"
-                                class="block bg-white border rounded-md p-3 shadow-sm cursor-pointer hover:bg-blue-200 ease-in-out transition duration-100">
-                                <div class="flex items-start space-x-3 ">
+                            <label for="level1_update" class="{{ $style }}">
+                                <div class="flex items-start space-x-3">
                                     <input type="radio" id="level1_update" name="nilai_update" value="1"
-                                        class="mt-1 accent-blue-600">
-                                    <span>Level 1. Rintisan:<br>SDS belum dilakukan oleh seluruh Produsen Data</span>
+                                        class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 1 ? 'checked' : '' }}
+                                        {{ $nilaiTerkunci !== null && $nilaiTerkunci != 1 ? 'disabled' : '' }}>
+                                    <span>Level 1. Rintisan</span>
                                 </div>
                             </label>
-                            <label for="level2_update"
-                                class="block bg-white border rounded-md p-3 shadow-sm cursor-pointer hover:bg-blue-200 ease-in-out transition duration-100">
+                            <label for="level2_update" class="{{ $style }}">
                                 <div class="flex items-start space-x-3">
                                     <input type="radio" id="level2_update" name="nilai_update" value="2"
-                                        class="mt-1 accent-blue-600">
-                                    <span>Level 2. Terkelola:<br>Penerapan SDS telah dilakukan oleh setiap Produsen Data
-                                        sesuai
-                                        standar masing-masing</span>
+                                        class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 2 ? 'checked' : '' }}
+                                        {{ $nilaiTerkunci !== null && $nilaiTerkunci != 2 ? 'disabled' : '' }}>
+                                    <span>Level 2. Terkelola</span>
                                 </div>
                             </label>
-                            <label for="level3_update"
-                                class="block bg-white border rounded-md p-3 shadow-sm cursor-pointer hover:bg-blue-200 ease-in-out transition duration-100">
-                                <div class="flex items-start space-x-3 ">
+                            <label for="level3_update" class="{{ $style }}">
+                                <div class="flex items-start space-x-3">
                                     <input type="radio" id="level3_update" name="nilai_update" value="3"
-                                        class="mt-1 accent-blue-600">
-                                    <span>Level 3. Terdefinisi:<br>SDS dilakukan berdasarkan kaidah yang ditetapkan dan
-                                        berlaku
-                                        untuk seluruh Produsen Data</span>
+                                        class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 3 ? 'checked' : '' }}
+                                        {{ $nilaiTerkunci !== null && $nilaiTerkunci != 3 ? 'disabled' : '' }}>
+                                    <span>Level 3. Terdefinisi</span>
                                 </div>
                             </label>
-                            <label for="level4_update"
-                                class="block bg-white border rounded-md p-3 shadow-sm cursor-pointer hover:bg-blue-200 ease-in-out transition duration-100">
+                            <label for="level4_update" class="{{ $style }}">
                                 <div class="flex items-start space-x-3">
                                     <input type="radio" id="level4_update" name="nilai_update" value="4"
-                                        class="mt-1 accent-blue-600">
-                                    <span>Level 4. Terpadu:<br>SDS dilakukan melalui reviu dan evaluasi berkala</span>
+                                        class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 4 ? 'checked' : '' }}
+                                        {{ $nilaiTerkunci !== null && $nilaiTerkunci != 4 ? 'disabled' : '' }}>
+                                    <span>Level 4. Terpadu</span>
                                 </div>
                             </label>
-                            <label for="level5_update"
-                                class="block bg-white border rounded-md p-3 shadow-sm cursor-pointer hover:bg-blue-200 ease-in-out transition duration-100">
+                            <label for="level5_update" class="{{ $style }}">
                                 <div class="flex items-start space-x-3">
                                     <input type="radio" id="level5_update" name="nilai_update" value="5"
-                                        class="mt-1 accent-blue-600">
-                                    <span>Level 5. Optimum:<br>Pemutakhiran SDS dilakukan bersama Walidata</span>
+                                        class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 5 ? 'checked' : '' }}
+                                        {{ $nilaiTerkunci !== null && $nilaiTerkunci != 5 ? 'disabled' : '' }}>
+                                    <span>Level 5. Optimum</span>
                                 </div>
                             </label>
                         </div>
@@ -175,7 +171,7 @@
                             <input type="radio" id="level1" name="nilai" value="1" class="mt-1 accent-blue-600"
                                 {{ $nilaiTerkunci == 1 ? 'checked' : '' }}
                                 {{ $nilaiTerkunci !== null && $nilaiTerkunci != 1 ? 'disabled' : '' }}>
-                            <span>Level 1. Rintisan:<br>SDS belum dilakukan oleh seluruh Produsen Data</span>
+                            <span>Level 1. Rintisan</span>
                         </div>
                     </label>
                     <label for="level2" class="{{ $style }}">
@@ -183,8 +179,7 @@
                             <input type="radio" id="level2" name="nilai" value="2"
                                 class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 2 ? 'checked' : '' }}
                                 {{ $nilaiTerkunci !== null && $nilaiTerkunci != 2 ? 'disabled' : '' }}>
-                            <span>Level 2. Terkelola:<br>Penerapan SDS telah dilakukan oleh setiap Produsen Data sesuai
-                                standar masing-masing</span>
+                            <span>Level 2. Terkelola</span>
                         </div>
                     </label>
                     <label for="level3" class="{{ $style }}">
@@ -192,8 +187,7 @@
                             <input type="radio" id="level3" name="nilai" value="3"
                                 class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 3 ? 'checked' : '' }}
                                 {{ $nilaiTerkunci !== null && $nilaiTerkunci != 3 ? 'disabled' : '' }}>
-                            <span>Level 3. Terdefinisi:<br>SDS dilakukan berdasarkan kaidah yang ditetapkan dan berlaku
-                                untuk seluruh Produsen Data</span>
+                            <span>Level 3. Terdefinisi</span>
                         </div>
                     </label>
                     <label for="level4" class="{{ $style }}">
@@ -201,7 +195,7 @@
                             <input type="radio" id="level4" name="nilai" value="4"
                                 class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 4 ? 'checked' : '' }}
                                 {{ $nilaiTerkunci !== null && $nilaiTerkunci != 4 ? 'disabled' : '' }}>
-                            <span>Level 4. Terpadu:<br>SDS dilakukan melalui reviu dan evaluasi berkala</span>
+                            <span>Level 4. Terpadu</span>
                         </div>
                     </label>
                     <label for="level5" class="{{ $style }}">
@@ -209,7 +203,7 @@
                             <input type="radio" id="level5" name="nilai" value="5"
                                 class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 5 ? 'checked' : '' }}
                                 {{ $nilaiTerkunci !== null && $nilaiTerkunci != 5 ? 'disabled' : '' }}>
-                            <span>Level 5. Optimum:<br>Pemutakhiran SDS dilakukan bersama Walidata</span>
+                            <span>Level 5. Optimum</span>
                         </div>
                     </label>
                 </div>
@@ -233,22 +227,43 @@
                 <label class="text-sm font-semibold text-gray-700 mb-1 block">Bukti Dukung</label>
                 <div class="text-xs text-gray-500 mb-2">Unggah bukti dalam format .pdf maksimal 3 MB</div>
                 @if ($dinilai)
-                    @if (substr($dinilai->bukti_dukung, -3) == 'pdf')
-                        <a href="{{ asset($dinilai->bukti_dukung) }}"
-                            class="block w-full text-gray-700 rounded p-5 shadow border-2 text-sm mb-4" target="_blank">
-                            Lihat PDF
-                        </a>
-                    @else
-                        <a href="{{ asset($dinilai->bukti_dukung) }}" target="_blank">
-                            <img src="{{ asset($dinilai->bukti_dukung) }}"
-                                class="block w-40 text-gray-700 rounded p-2 shadow border-2 text-sm mb-4"
-                                alt="Bukti Dukung">
-                        </a>
+                    @php
+                        $buktiDukungFiles = $dinilai->bukti_dukung != '-'
+                            ? json_decode($dinilai->bukti_dukung)
+                            : [];
+                    @endphp
+                    @if (!empty($buktiDukungFiles))
+                        @foreach ($buktiDukungFiles as $buktiFile)
+                            @if (substr($buktiFile, -3) == 'pdf')
+                                <a href="{{ asset($buktiFile) }}"
+                                    class="block w-full text-gray-700 rounded p-5 shadow border-2 text-sm mb-4" target="_blank">
+                                    Lihat PDF
+                                </a>
+                            @else
+                                <a href="{{ asset($buktiFile) }}" target="_blank">
+                                    <img src="{{ asset($buktiFile) }}"
+                                        class="block w-40 text-gray-700 rounded p-2 shadow border-2 text-sm mb-4"
+                                        alt="Bukti Dukung">
+                                </a>
+                            @endif
+                        @endforeach
+                        <div class="text-green-500 text-sm">Bukti dukung sudah diunggah</div>
                     @endif
-                    <div class="text-green-500 text-sm">Bukti dukung sudah diunggah</div>
                 @else
-                    <input type="file" name="bukti_dukung"
-                        class="block w-full text-gray-700 rounded p-5 shadow border-2 text-sm mb-4" />
+                    <div id="buktiDukungContainer">
+                        <div id="inputFormRow" class="mb-3">
+                            <div class="flex items-center space-x-2">
+                                <input type="file" name="bukti_dukung[]"
+                                    class="block w-full text-gray-700 rounded p-5 shadow border-2 text-sm"
+                                    accept=".pdf" />
+                            </div>
+                        </div>
+                        <div id="newBuktiDukungRow"></div>
+                        <button type="button" id="addBuktiDukungRow"
+                            class="btn btn-sm text-black bg-green-300 border-2 mb-4">
+                            Tambah Bukti Dukung
+                        </button>
+                    </div>
                 @endif
             </div>
 
@@ -315,6 +330,37 @@
 
             // Tambahkan event saat diklik
             radios.on('change', updateSelectedBackground);
+
+            // Bukti Dukung Dynamic Rows
+            let buktiDukungRowCount = 1;
+            $("#addBuktiDukungRow").click(function() {
+                if (buktiDukungRowCount >= 3) {
+                    alert('Maksimal 3 bukti dukung');
+                    return;
+                }
+
+                buktiDukungRowCount++;
+                var html = `
+                    <div id="inputFormRow" class="mb-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="file" name="bukti_dukung[]"
+                                class="block w-full text-gray-700 rounded p-5 shadow border-2 text-sm"
+                                accept=".pdf" />
+                            <button type="button" class="removeBuktiDukungRow text-red-600 hover:text-red-800">
+                                Hapus
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                $('#newBuktiDukungRow').append(html);
+            });
+
+            // Remove row
+            $(document).on('click', '.removeBuktiDukungRow', function() {
+                $(this).closest('#inputFormRow').remove();
+                buktiDukungRowCount--;
+            });
         });
     </script>
 @endpush

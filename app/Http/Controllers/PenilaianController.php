@@ -247,17 +247,17 @@ class PenilaianController extends Controller
             'nilai.required' => 'Tingkat kematangan harus diisi',
         ]);
 
-        $savedFileName = '';
-
+        $savedFileNames = [];
 
         if ($request->hasFile('bukti_dukung')) {
-            $file = $request->file('bukti_dukung');
-            $fileName = $file->getClientOriginalName();
-            $fileExt = $file->getClientOriginalExtension();
-            $savedFileName = time() . '-' . Auth::user()->id . '-' . $fileName . '.' . $fileExt;
-            $file->move('bukti-dukung', $savedFileName);
+            foreach ($request->file('bukti_dukung') as $file) {
+                $fileName = $file->getClientOriginalName();
+                $fileExt = $file->getClientOriginalExtension();
+                $savedFileName = time() . '-' . Auth::user()->id . '-' . $fileName . '.' . $fileExt;
+                $file->move('bukti-dukung', $savedFileName);
+                $savedFileNames[] = 'bukti-dukung/' . $savedFileName;
+            }
         }
-
 
         $penilaian = Penilaian::create([
             'indikator_id' => $indikator,
@@ -266,7 +266,7 @@ class PenilaianController extends Controller
             'formulir_id' => $formulir->id,
             'user_id' =>  Auth::user()->id,
             'catatan' => $request->catatan,
-            'bukti_dukung' => 'bukti-dukung/' . $savedFileName ?? '-'
+            'bukti_dukung' => count($savedFileNames) > 0 ? json_encode($savedFileNames) : '-'
         ]);
 
         // if ($penilaian) {

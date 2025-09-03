@@ -181,25 +181,40 @@ class FormulirPenilaianDisposisiController extends Controller
      */
     public function storeKoreksi(Request $request)
     {
+        \Log::error('Store Koreksi Request', [
+            'all_data' => $request->all(),
+            'user_role' => Auth::user()->role,
+            'user_id' => Auth::id()
+        ]);
+
         $penilaian = Penilaian::find($request->penilaian_id);
         $pengoreksi = Auth::user()->id;
         $pengoreksiUser = User::find($pengoreksi);
 
+        // Validasi: Pastikan evaluasi belum terisi
+        if ($penilaian->evaluasi) {
+            \Log::warning('Attempt to update existing evaluation', [
+                'penilaian_id' => $penilaian->id,
+                'existing_evaluasi' => $penilaian->evaluasi
+            ]);
+            return redirect()->back()->with('error', 'Evaluasi sudah terisi dan tidak dapat diubah');
+        }
+
         // Debug logging yang lebih komprehensif
-        Log::info('Store Koreksi Debug - Detailed', [
+        \Log::error('Store Koreksi Debug - Detailed', [
             'request_data' => $request->all(),
             'penilaian_id' => $request->penilaian_id,
             'penilaian_details' => $penilaian ? $penilaian->toArray() : null,
             'pengoreksi_id' => $pengoreksi,
             'pengoreksi_role' => $pengoreksiUser->role,
             'pengoreksi_name' => $pengoreksiUser->name,
-            'request_nilai' => $request->nilai,
+            'request_nilai' => $request->input('nilai'),
             'current_user_role' => Auth::user()->role
         ]);
 
         // Tambahkan validasi tambahan
         if (!$penilaian) {
-            Log::error('Penilaian not found', [
+            \Log::error('Penilaian not found', [
                 'penilaian_id' => $request->penilaian_id
             ]);
             return redirect()->back()->with('error', 'Data penilaian tidak ditemukan');
@@ -207,20 +222,35 @@ class FormulirPenilaianDisposisiController extends Controller
 
         // Pastikan hanya Walidata yang bisa update
         if ($pengoreksiUser->role !== 'walidata') {
-            Log::warning('Unauthorized update attempt', [
+            \Log::warning('Unauthorized update attempt', [
                 'user_id' => $pengoreksi,
                 'user_role' => $pengoreksiUser->role
             ]);
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk melakukan koreksi');
         }
 
-        $updateResult = $penilaian->update([
-            'nilai_diupdate' => $request->nilai,
-            'pengoreksi' => $pengoreksi
+        $savedFileNames = [];
+
+        // Proses upload bukti dukung
+        if ($request->hasFile('bukti_dukung')) {
+            foreach ($request->file('bukti_dukung') as $file) {
+                $fileName = $file->getClientOriginalName();
+                $fileExt = $file->getClientOriginalExtension();
+                $savedFileName = time() . '-' . $pengoreksi . '-' . $fileName . '.' . $fileExt;
+                $file->move('bukti-dukung', $savedFileName);
+                $savedFileNames[] = 'bukti-dukung/' . $savedFileName;
+            }
+        }
+
+        $penilaian->update([
+            'nilai_diupdate' => $request->input('nilai'),
+            'pengoreksi' => $pengoreksi,
+            'evaluasi' => $request->input('evaluasi'), // Tambahkan evaluasi
+            'bukti_dukung' => !empty($savedFileNames) ? json_encode($savedFileNames) : '-'
         ]);
 
         // Log hasil update
-        Log::info('Store Koreksi Update Result', [
+        \Log::error('Store Koreksi Update Result', [
             'update_success' => $updateResult,
             'updated_penilaian' => $penilaian->fresh()->toArray()
         ]);
@@ -232,14 +262,29 @@ class FormulirPenilaianDisposisiController extends Controller
 
     public function updateEvaluasi(Request $request)
     {
-        // dd($request->all());
         $penilaian = Penilaian::find($request->penilaian_id);
         $pengoreksi = Auth::user()->id;
 
-        // Validasi: Pastikan Walidata sudah mengisi nilai_diupdate sebelum admin bisa menilai
-        if (Auth::user()->role === 'admin') {
-            if ($penilaian->nilai_diupdate === null) {
-                return redirect()->back()->with('error', 'Walidata belum mengisi penilaian. Anda tidak dapat melakukan evaluasi.');
+        // Pastikan hanya Admin yang bisa menyimpan evaluasi
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk melakukan evaluasi');
+        }
+
+        // Pastikan Walidata sudah mengisi nilai_diupdate sebelum admin bisa menilai
+        if ($penilaian->nilai_diupdate === null) {
+            return redirect()->back()->with('error', 'Walidata belum mengisi penilaian. Anda tidak dapat melakukan evaluasi.');
+        }
+
+        $savedFileNames = [];
+
+        // Proses upload bukti dukung
+        if ($request->hasFile('bukti_dukung')) {
+            foreach ($request->file('bukti_dukung') as $file) {
+                $fileName = $file->getClientOriginalName();
+                $fileExt = $file->getClientOriginalExtension();
+                $savedFileName = time() . '-' . $pengoreksi . '-' . $fileName . '.' . $fileExt;
+                $file->move('bukti-dukung', $savedFileName);
+                $savedFileNames[] = 'bukti-dukung/' . $savedFileName;
             }
         }
 
@@ -247,7 +292,8 @@ class FormulirPenilaianDisposisiController extends Controller
             'nilai_koreksi' => $request->nilai_evaluasi,
             'dikoreksi_by' => $pengoreksi,
             'evaluasi' => $request->evaluasi,
-            'tanggal_dikoreksi' => now()
+            'tanggal_dikoreksi' => now(),
+            'bukti_dukung' => !empty($savedFileNames) ? json_encode($savedFileNames) : '-'
         ]);
 
         return redirect()->back()->with('success', 'Berhasil mengoreksi penilaian');
