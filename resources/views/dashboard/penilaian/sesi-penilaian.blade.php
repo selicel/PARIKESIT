@@ -171,7 +171,14 @@
                             <input type="radio" id="level1" name="nilai" value="1" class="mt-1 accent-blue-600"
                                 {{ $nilaiTerkunci == 1 ? 'checked' : '' }}
                                 {{ $nilaiTerkunci !== null && $nilaiTerkunci != 1 ? 'disabled' : '' }}>
-                            <span>Level 1. Rintisan</span>
+                            <div class="flex flex-col">
+                                <span>Level 1. Rintisan</span>
+                                @if(!empty($indikator->level_1_kriteria))
+                                    <small class="text-xs text-gray-600 mt-1">
+                                        {{ $indikator->level_1_kriteria }}
+                                    </small>
+                                @endif
+                            </div>
                         </div>
                     </label>
                     <label for="level2" class="{{ $style }}">
@@ -179,7 +186,14 @@
                             <input type="radio" id="level2" name="nilai" value="2"
                                 class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 2 ? 'checked' : '' }}
                                 {{ $nilaiTerkunci !== null && $nilaiTerkunci != 2 ? 'disabled' : '' }}>
-                            <span>Level 2. Terkelola</span>
+                            <div class="flex flex-col">
+                                <span>Level 2. Terkelola</span>
+                                @if(!empty($indikator->level_2_kriteria))
+                                    <small class="text-xs text-gray-600 mt-1">
+                                        {{ $indikator->level_2_kriteria }}
+                                    </small>
+                                @endif
+                            </div>
                         </div>
                     </label>
                     <label for="level3" class="{{ $style }}">
@@ -187,7 +201,14 @@
                             <input type="radio" id="level3" name="nilai" value="3"
                                 class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 3 ? 'checked' : '' }}
                                 {{ $nilaiTerkunci !== null && $nilaiTerkunci != 3 ? 'disabled' : '' }}>
-                            <span>Level 3. Terdefinisi</span>
+                            <div class="flex flex-col">
+                                <span>Level 3. Terdefinisi</span>
+                                @if(!empty($indikator->level_3_kriteria))
+                                    <small class="text-xs text-gray-600 mt-1">
+                                        {{ $indikator->level_3_kriteria }}
+                                    </small>
+                                @endif
+                            </div>
                         </div>
                     </label>
                     <label for="level4" class="{{ $style }}">
@@ -195,7 +216,14 @@
                             <input type="radio" id="level4" name="nilai" value="4"
                                 class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 4 ? 'checked' : '' }}
                                 {{ $nilaiTerkunci !== null && $nilaiTerkunci != 4 ? 'disabled' : '' }}>
-                            <span>Level 4. Terpadu</span>
+                            <div class="flex flex-col">
+                                <span>Level 4. Terpadu</span>
+                                @if(!empty($indikator->level_4_kriteria))
+                                    <small class="text-xs text-gray-600 mt-1">
+                                        {{ $indikator->level_4_kriteria }}
+                                    </small>
+                                @endif
+                            </div>
                         </div>
                     </label>
                     <label for="level5" class="{{ $style }}">
@@ -203,7 +231,14 @@
                             <input type="radio" id="level5" name="nilai" value="5"
                                 class="mt-1 accent-blue-600" {{ $nilaiTerkunci == 5 ? 'checked' : '' }}
                                 {{ $nilaiTerkunci !== null && $nilaiTerkunci != 5 ? 'disabled' : '' }}>
-                            <span>Level 5. Optimum</span>
+                            <div class="flex flex-col">
+                                <span>Level 5. Optimum</span>
+                                @if(!empty($indikator->level_5_kriteria))
+                                    <small class="text-xs text-gray-600 mt-1">
+                                        {{ $indikator->level_5_kriteria }}
+                                    </small>
+                                @endif
+                            </div>
                         </div>
                     </label>
                 </div>

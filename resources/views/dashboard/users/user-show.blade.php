@@ -55,6 +55,29 @@
                     </div>
                 </div>
 
+                @if(Auth::user()->role == 'admin')
+                    <div class="bg-yellow-50 p-4 rounded-lg shadow-sm border-2 border-yellow-200">
+                        <label class="block text-sm font-medium text-gray-600 mb-2">
+                            <i class="fas fa-exclamation-triangle text-yellow-600 mr-1"></i>
+                            Password (Admin Only)
+                        </label>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center flex-grow">
+                                <i class="fas fa-key mr-3 text-yellow-600"></i>
+                                <span id="password-display" class="text-lg font-mono font-semibold text-gray-800 bg-white px-3 py-1 rounded border">
+                                    ••••••••
+                                </span>
+                                <span id="password-actual" class="text-lg font-mono font-semibold text-gray-800 bg-white px-3 py-1 rounded border hidden">
+                                    {{ $user->plain_password ?? 'N/A' }}
+                                </span>
+                            </div>
+                            <button id="toggle-password-show" class="ml-3 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+                                <i class="fas fa-eye"></i> <span>Show</span>
+                            </button>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
                     <label class="block text-sm font-medium text-gray-600 mb-2">Tanggal Dibuat</label>
                     <div class="flex items-center">
@@ -80,7 +103,32 @@
     </div>
 @endsection
 
+@push('scripts')
+<script>
+$(document).ready(function() {
+    // Toggle password show/hide
+    $('#toggle-password-show').click(function() {
+        const $btn = $(this);
+        const $icon = $btn.find('i');
+        const $text = $btn.find('span');
+        const $display = $('#password-display');
+        const $actual = $('#password-actual');
 
+        if ($display.hasClass('hidden')) {
+            $display.removeClass('hidden');
+            $actual.addClass('hidden');
+            $icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            $text.text('Show');
+        } else {
+            $display.addClass('hidden');
+            $actual.removeClass('hidden');
+            $icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            $text.text('Hide');
+        }
+    });
+});
+</script>
+@endpush
 
 {{-- @push('scripts')
     <script>

@@ -16,6 +16,11 @@ return new class extends Migration
             $table->foreignId('aspek_id')->constrained()->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('nama_indikator');
             $table->decimal('bobot_indikator', 5, 2)->nullable();
+            $table->text('level_1_kriteria')->nullable();
+            $table->text('level_2_kriteria')->nullable();
+            $table->text('level_3_kriteria')->nullable();
+            $table->text('level_4_kriteria')->nullable();
+            $table->text('level_5_kriteria')->nullable();
 
 
             $table->softDeletes();

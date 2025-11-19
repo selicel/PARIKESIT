@@ -110,6 +110,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('user', UserController::class);
+    Route::post('user/{user}/reset-password', [UserController::class, 'resetPassword'])->name('user.reset-password');
     Route::get('pembinaan/{pembinaan}/download-all', [PembinaanController::class, 'downloadAll'])
         ->name('pembinaan.download-all');
 });

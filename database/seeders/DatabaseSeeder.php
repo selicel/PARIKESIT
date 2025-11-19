@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             FormulirSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
+            IndikatorKriteriaSeeder::class
         ]);
     }
 }

@@ -99,88 +99,65 @@ use App\Models\Penilaian;
 
                             <div class="relative overflow-x-auto w-full">
 
-                                <table class="w-full">
-                                    <thead class="bg-gray-100 w-100">
+                                <table class="w-full text-sm">
+                                    <thead class="bg-indigo-600 text-white">
                                         <tr>
-                                            <th scope="col"
-                                                class="w-1/2 px-6 py-3 text-left text-xs leading-4 font-bold text-gray-700 uppercase tracking-wider break-all">
-                                                Indikator</th>
-                                            <th scope="col"
-                                                class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-bold text-gray-700 uppercase tracking-wider">
-                                                Nilai OPD</th>
-                                            <th scope="col"
-                                                class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-bold text-gray-700 uppercase tracking-wider">
-                                                Nilai Walidata</th>
-                                            <th scope="col"
-                                                class="w-1/5 px-6 py-3 text-left text-xs leading-4 font-bold text-gray-700 uppercase tracking-wider">
-                                                Nilai BPS</th>
-                                            <th scope="col"
-                                                class="w-1/3 px-6 py-3 text-left text-xs leading-4 font-bold text-gray-700 uppercase tracking-wider">
-                                                Action</th>
+                                            <th class="px-3 py-2 text-left text-xs font-semibold uppercase">Indikator</th>
+                                            <th class="px-3 py-2 text-center text-xs font-semibold uppercase w-20">OPD</th>
+                                            <th class="px-3 py-2 text-center text-xs font-semibold uppercase w-20">Walidata</th>
+                                            <th class="px-3 py-2 text-center text-xs font-semibold uppercase w-20">BPS</th>
+                                            <th class="px-3 py-2 text-center text-xs font-semibold uppercase w-24">Aksi</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="bg-white">
-                                        @foreach ($aspek->indikator as $indikator)
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        @foreach ($aspek->indikator as $index => $indikator)
                                             @php
-                                                $domainDibuka = $indikator->aspek->domain->formulirs->firstWhere(
-                                                    'id',
-                                                    $formulir->id,
-                                                );
-                                                $penilaianUser = $indikator->penilaian
-                                                    ->where('user_id', $opd->id)
-                                                    ->where('formulir_id', $domainDibuka->id)
-                                                    ->first();
+                                                $domainDibuka = $indikator->aspek->domain->formulirs->firstWhere('id', $formulir->id);
+                                                $penilaianUser = $indikator->penilaian->where('user_id', $opd->id)->where('formulir_id', $domainDibuka->id)->first();
 
-                                                // Cari penilaian OPD terlebih dahulu
                                                 $penilaianOPD = Penilaian::where('user_id', $opd->id)
                                                     ->where('formulir_id', $domainDibuka->id)
                                                     ->where('indikator_id', $indikator->id)
-                                                    ->whereHas('user', function($query) {
-                                                        $query->where('role', 'opd');
-                                                    })
+                                                    ->whereHas('user', function($query) { $query->where('role', 'opd'); })
                                                     ->first();
 
-                                                // Cari penilaian Walidata
                                                 $penilaianWalidata = Penilaian::where('user_id', $opd->id)
                                                     ->where('formulir_id', $domainDibuka->id)
                                                     ->where('indikator_id', $indikator->id)
                                                     ->whereNotNull('nilai_diupdate')
                                                     ->first();
 
-                                                // Cari penilaian BPS (Admin)
                                                 $penilaianBPS = Penilaian::where('user_id', $opd->id)
                                                     ->where('formulir_id', $domainDibuka->id)
                                                     ->where('indikator_id', $indikator->id)
                                                     ->whereNotNull('nilai_koreksi')
                                                     ->first();
                                             @endphp
-                                            <tr class="{{ $penilaianUser != null ?  : '' }}">
-                                                <td class="px-6 py-4 border-b border-gray-200 break-all truncate max-w-20"
-                                                    title="{{ $indikator->nama_indikator }}">
-                                                    <p class="text-gray-800 font-semibold text-md ">
-                                                        {{ Str::of($indikator->nama_indikator)->limit(50) }}
-                                                    </p>
+                                            <tr class="hover:bg-gray-50">
+                                                <td class="px-3 py-2">
+                                                    <span class="text-gray-800 font-medium leading-snug">
+                                                        {{ $indikator->nama_indikator }}
+                                                    </span>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                                    <span class="text-black rounded text-md font-bold">
+                                                <td class="px-3 py-2 text-center">
+                                                    <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded font-semibold">
                                                         {{ $penilaianOPD ? ($penilaianOPD->nilai ?? '-') : '-' }}
                                                     </span>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                                    <span class="text-black rounded text-md font-bold">
+                                                <td class="px-3 py-2 text-center">
+                                                    <span class="inline-block px-2 py-1 {{ $penilaianWalidata ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-600' }} rounded font-semibold">
                                                         {{ $penilaianWalidata ? ($penilaianWalidata->nilai_diupdate ?? '-') : '-' }}
                                                     </span>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                                    <span class="text-black rounded text-md font-bold">
+                                                <td class="px-3 py-2 text-center">
+                                                    <span class="inline-block px-2 py-1 {{ $penilaianBPS ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600' }} rounded font-semibold">
                                                         {{ $penilaianBPS ? ($penilaianBPS->nilai_koreksi ?? '-') : '-' }}
                                                     </span>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                                <td class="px-3 py-2 text-center">
                                                     <a href="{{ route('disposisi.koreksi.indikator.beri-koreksi', [$opd->name, $formulir->nama_formulir, $domain->nama_domain, $aspek->nama_aspek, $indikator->nama_indikator]) }}"
-                                                        class="text-blue-500 hover:text-blue-700 font-normal text-sm">
-                                                        <i
-                                                            class="fad fa-external-link-alt text-md mr-1 bg-indigo-500 text-white p-4 rounded ml-2"></i>
+                                                        class="inline-flex items-center px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs font-medium transition-colors">
+                                                        <i class="fas fa-edit mr-1"></i> Koreksi
                                                     </a>
                                                 </td>
                                             </tr>

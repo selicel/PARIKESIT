@@ -73,11 +73,10 @@
                                 <tbody class="bg-white">
                                     @foreach ($aspek->indikator as $indikator)
                                         <tr>
-                                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 truncate"
-                                                title="{{ $indikator->nama_indikator }}">
+                                            <td class="px-6 py-4 border-b border-gray-200">
                                                 <a href="{{ route('formulir.penilaianAspek', [$formulir, $domain->nama_domain, $aspek->nama_aspek, $indikator->nama_indikator]) }}"
-                                                    class="text-gray-800 font-semibold text-md ">
-                                                    {{ Str::of($indikator->nama_indikator)->limit(60) }}
+                                                    class="text-gray-800 font-semibold text-md leading-relaxed">
+                                                    {{ $indikator->nama_indikator }}
                                                 </a>
                                             </td>
                                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">

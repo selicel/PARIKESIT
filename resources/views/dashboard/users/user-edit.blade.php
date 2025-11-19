@@ -77,6 +77,41 @@
                 </select>
             </div>
 
+            @if(Auth::user()->role == 'admin')
+                <div class="mt-6 border-t pt-6">
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-yellow-700">
+                                    <strong>Ubah Password (Opsional)</strong><br>
+                                    Kosongkan jika tidak ingin mengubah password. Password minimal 8 karakter.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label class="text-sm font-medium text-gray-600 mb-2">
+                            Password Baru (Opsional)
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input type="password" id="password"
+                                class="w-full pl-10 p-2 rounded border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                name="password" placeholder="Masukkan password baru (min. 8 karakter)">
+                        </div>
+                        @error('password')
+                            <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            @endif
+
             <div class="flex justify-end space-x-4 mt-6">
                 <a href="{{ route('user.index') }}"
                    class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200 flex items-center">

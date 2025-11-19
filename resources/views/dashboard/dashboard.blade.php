@@ -33,6 +33,97 @@
                 </div>
             </div>
 
+            {{-- Progress Bar Section --}}
+            <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+                    <i class="fas fa-chart-line text-blue-600 mr-2"></i>Progress Penilaian
+                </h3>
+
+                @if(isset($progressData) && count($progressData) > 0)
+                    @foreach($progressData as $index => $kegiatan)
+                        <div class="mb-4">
+                            @if(auth()->user()->role == 'walidata')
+                                {{-- Accordion for Walidata --}}
+                                <button type="button" 
+                                        onclick="toggleKegiatan{{ $index }}()" 
+                                        class="w-full p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-md hover:shadow-lg transition-all">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex-1 text-left">
+                                            <h4 class="text-xl font-bold text-gray-800 mb-2 flex items-center">
+                                                <i class="fas fa-clipboard-list text-blue-600 mr-2"></i>
+                                                {{ $kegiatan['nama'] }}
+                                            </h4>
+                                            <p class="text-sm text-gray-600 flex items-center">
+                                                <i class="far fa-calendar text-gray-500 mr-1"></i>
+                                                {{ \Carbon\Carbon::parse($kegiatan['tanggal'])->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                                            </p>
+                                            @if(count($kegiatan['indikator_belum_dikoreksi']) > 0)
+                                                <div class="mt-2">
+                                                    <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-bold">
+                                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                                        {{ count($kegiatan['indikator_belum_dikoreksi']) }} Indikator Belum Dikoreksi
+                                                    </span>
+                                                </div>
+                                            @else
+                                                <div class="mt-2">
+                                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-bold">
+                                                        <i class="fas fa-check-circle mr-1"></i>
+                                                        Semua Indikator Sudah Dikoreksi
+                                                    </span>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="ml-4">
+                                            <svg id="iconKegiatan{{ $index }}" class="w-6 h-6 text-blue-600 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </button>
+                                
+                                <div id="contentKegiatan{{ $index }}" class="hidden mt-4 p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
+                                    @include('dashboard.partials.progress-walidata', ['kegiatan' => $kegiatan])
+                                </div>
+                            @else
+                                {{-- Normal display for OPD and Admin --}}
+                                <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-md">
+                                    <h4 class="text-xl font-bold text-gray-800 mb-2 flex items-center">
+                                        <i class="fas fa-clipboard-list text-blue-600 mr-2"></i>
+                                        {{ $kegiatan['nama'] }}
+                                    </h4>
+                                    <p class="text-sm text-gray-600 mb-4">
+                                        <i class="far fa-calendar text-gray-500 mr-1"></i>
+                                        {{ \Carbon\Carbon::parse($kegiatan['tanggal'])->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                                    </p>
+
+                                    @if(auth()->user()->role == 'opd')
+                                        @include('dashboard.partials.progress-opd', ['kegiatan' => $kegiatan])
+                                    @elseif(auth()->user()->role == 'admin')
+                                        @include('dashboard.partials.progress-admin', ['kegiatan' => $kegiatan])
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                @else
+                    <div class="text-center py-10">
+                        <i class="fas fa-info-circle text-gray-400 text-5xl mb-4"></i>
+                        <p class="text-lg font-medium text-gray-600 mb-2">Belum ada data progress penilaian</p>
+                        <p class="text-sm text-gray-500">
+                            @if(auth()->user()->role == 'opd')
+                                Mulai lakukan penilaian mandiri untuk melihat progress Anda.
+                            @elseif(auth()->user()->role == 'walidata')
+                                Belum ada penilaian yang perlu dikoreksi.
+                            @elseif(auth()->user()->role == 'admin')
+                                Belum ada penilaian yang perlu dievaluasi.
+                            @else
+                                Progress penilaian akan muncul di sini.
+                            @endif
+                        </p>
+                    </div>
+                @endif
+            </div>
+
             {{-- Pintasan Card --}}
             <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
                 <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Pintasan</h3>
@@ -121,4 +212,22 @@
     </div>
 @endsection
 @push('scripts')
+<script>
+    @if(isset($progressData) && count($progressData) > 0)
+        @foreach($progressData as $index => $kegiatan)
+            function toggleKegiatan{{ $index }}() {
+                const content = document.getElementById('contentKegiatan{{ $index }}');
+                const icon = document.getElementById('iconKegiatan{{ $index }}');
+                
+                if (content.classList.contains('hidden')) {
+                    content.classList.remove('hidden');
+                    icon.style.transform = 'rotate(90deg)';
+                } else {
+                    content.classList.add('hidden');
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            }
+        @endforeach
+    @endif
+</script>
 @endpush

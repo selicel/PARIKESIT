@@ -34,11 +34,14 @@
                             <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full font-semibold">Aktif</span>
                             <span class="text-xs px-2 py-1 bg-red-100 text-red-700 rounded-full font-semibold">Tinggi</span>
                         </div> --}}
-                            <div class="text-xs text-gray-500 mt-1 space-x-2">
-                                {{-- <span class="inline-block"><i class="fas fa-tag mr-1"></i>Penilaian Mandiri</span>
-                                <span class="inline-block"><i class="fas fa-user-shield mr-1"></i>Admin BPS</span> --}}
-                                {{-- <span class="inline-block"><i class="fas fa-calendar-alt mr-1"></i>Deadline:
-                                    31/3/2025</span> --}}
+                            <div class="text-sm text-gray-600 mt-2 space-y-1">
+                                <span class="flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                                    </svg>
+                                    <span class="font-semibold">Dibuat oleh:</span>
+                                    <span class="ml-1">{{ $selesai->creator->name ?? 'Unknown' }}</span>
+                                </span>
                             </div>
                         </div>
                         <div class="flex gap-2">

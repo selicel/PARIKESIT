@@ -14,6 +14,11 @@ class Indikator extends Model
         'aspek_id',
         'nama_indikator',
         'bobot_indikator',
+        'level_1_kriteria',
+        'level_2_kriteria',
+        'level_3_kriteria',
+        'level_4_kriteria',
+        'level_5_kriteria'
     ];
 
 

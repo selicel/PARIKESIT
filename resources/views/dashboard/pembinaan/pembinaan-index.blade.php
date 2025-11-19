@@ -80,16 +80,12 @@
                         {{ \Carbon\Carbon::parse($pb->created_at)->locale('id')->isoFormat('dddd, D MMMM Y') }}
                     </div>
                     <p class="text-sm text-gray-700 mb-3">
-                        @php
-                            $countDok = count($pb->file_Pembinaan);
-                        @endphp
-                        <b>
-                            @if ($countDok > 0)
-                                File Media Tersedia
-                            @else
-                                Belum ada File Media
-                            @endif
-                        </b>
+                        <span class="flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                            </svg>
+                            <b>Dibuat oleh: {{ $pb->profile->name ?? 'Unknown' }}</b>
+                        </span>
                     </p>
                     <div class="flex space-x-2">
                         <a href="{{ route('pembinaan.show', $pb->id) }}"

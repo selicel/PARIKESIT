@@ -24,6 +24,7 @@ class Penilaian extends Model
 
 
         'nilai_diupdate',
+        'catatan_koreksi', // Catatan penjelasan koreksi dari walidata
         'diupdate_by',
         'tanggal_diperbarui',
 

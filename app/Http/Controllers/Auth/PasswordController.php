@@ -22,6 +22,7 @@ class PasswordController extends Controller
 
         $request->user()->update([
             'password' => Hash::make($validated['password']),
+            'plain_password' => $validated['password'], // Simpan password asli juga
         ]);
 
         return back()->with('status', 'password-updated');

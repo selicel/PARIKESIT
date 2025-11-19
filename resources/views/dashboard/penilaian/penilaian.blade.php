@@ -140,7 +140,7 @@
                                 <td class="py-2 px-4 font-semibold">{{ $domain->nama_domain }}</td>
                                 <td class="py-2 px-4">{{ $domain->aspek->count() }}</td>
                                 <td class="py-2 px-4 font-bold text-blue-700">
-                                    {{ $dataPersentasePerDomain[$domain->id]['persentase_domain'] ?? '0.00' }}
+                                    {{ number_format($dataPersentasePerDomain[$domain->id]['persentase_domain'] ?? 0, 2) }}
                                 </td>
                             </tr>
                         @endforeach

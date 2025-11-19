@@ -190,11 +190,24 @@ use App\Models\Penilaian;
             </div>
 
         @if( Auth::user()->role === 'opd')
-            <div class="mt-8 space-y-2">
+            <div class="mt-8 space-y-4">
+                {{-- Penjelasan Koreksi dari Walidata --}}
+                <div class="border-2 border-green-400 p-4 rounded-md">
+                    <h1 class="text-green-600 font-semibold text-md mb-2">
+                        <i class="fas fa-comment-dots mr-2"></i>Penjelasan Koreksi dari Walidata
+                    </h1>
+                    <p class="text-md {{ optional($nilai_dikoreksi)->catatan_koreksi ? 'text-gray-900' : 'text-red-600' }}">
+                        {{ optional($nilai_dikoreksi)->catatan_koreksi ?? 'Belum ada penjelasan koreksi dari Walidata.' }}
+                    </p>
+                </div>
+                
+                {{-- Evaluasi dari Admin --}}
                 <div class="border-2 border-blue-400 p-4 rounded-md">
-                    <h1 class="text-blue-500 font-semibold text-md mb-2">Evaluasi Admin</h1>
-                    <p class="text-md text-gray-900">
-                        {{ $nilai_dievaluasi->evaluasi ?? 'Belum ada evaluasi' }}
+                    <h1 class="text-blue-500 font-semibold text-md mb-2">
+                        <i class="fas fa-clipboard-check mr-2"></i>Evaluasi Admin
+                    </h1>
+                    <p class="text-md {{ optional($nilai_dievaluasi)->evaluasi ? 'text-gray-900' : 'text-red-600' }}">
+                        {{ optional($nilai_dievaluasi)->evaluasi ?? 'Belum ada evaluasi dari Admin.' }}
                     </p>
                 </div>
             </div>
@@ -253,7 +266,14 @@ use App\Models\Penilaian;
                                         <input type="radio" id="level1" name="nilai" value="1"
                                             class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 1 ? 'checked' : '' }}
                                             {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 1 ? 'disabled' : '' }}>
+                                        <div class="flex flex-col">
                                         <span>Level 1. Rintisan</span>
+                                            @if(!empty($indikator->level_1_kriteria))
+                                                <small class="text-xs text-gray-600 mt-1">
+                                                    {{ $indikator->level_1_kriteria }}
+                                                </small>
+                                            @endif
+                                        </div>
                                     </div>
                                 </label>
                                 <label for="level2" class="{{ $style }}">
@@ -261,7 +281,14 @@ use App\Models\Penilaian;
                                         <input type="radio" id="level2" name="nilai" value="2"
                                             class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 2 ? 'checked' : '' }}
                                             {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 2 ? 'disabled' : '' }}>
+                                        <div class="flex flex-col">
                                         <span>Level 2. Terkelola</span>
+                                            @if(!empty($indikator->level_2_kriteria))
+                                                <small class="text-xs text-gray-600 mt-1">
+                                                    {{ $indikator->level_2_kriteria }}
+                                                </small>
+                                            @endif
+                                        </div>
                                     </div>
                                 </label>
                                 <label for="level3" class="{{ $style }}">
@@ -269,7 +296,14 @@ use App\Models\Penilaian;
                                         <input type="radio" id="level3" name="nilai" value="3"
                                             class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 3 ? 'checked' : '' }}
                                             {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 3 ? 'disabled' : '' }}>
+                                        <div class="flex flex-col">
                                         <span>Level 3. Terdefinisi</span>
+                                            @if(!empty($indikator->level_3_kriteria))
+                                                <small class="text-xs text-gray-600 mt-1">
+                                                    {{ $indikator->level_3_kriteria }}
+                                                </small>
+                                            @endif
+                                        </div>
                                     </div>
                                 </label>
                                 <label for="level4" class="{{ $style }}">
@@ -277,7 +311,14 @@ use App\Models\Penilaian;
                                         <input type="radio" id="level4" name="nilai" value="4"
                                             class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 4 ? 'checked' : '' }}
                                             {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 4 ? 'disabled' : '' }}>
+                                        <div class="flex flex-col">
                                         <span>Level 4. Terpadu</span>
+                                            @if(!empty($indikator->level_4_kriteria))
+                                                <small class="text-xs text-gray-600 mt-1">
+                                                    {{ $indikator->level_4_kriteria }}
+                                                </small>
+                                            @endif
+                                        </div>
                                     </div>
                                 </label>
                                 <label for="level5" class="{{ $style }}">
@@ -285,13 +326,39 @@ use App\Models\Penilaian;
                                         <input type="radio" id="level5" name="nilai" value="5"
                                             class="mt-1 accent-blue-600" {{ $nilaiKoreksiTerkunci == 5 ? 'checked' : '' }}
                                             {{ $nilaiKoreksiTerkunci !== null && $nilaiKoreksiTerkunci != 5 ? 'disabled' : '' }}>
+                                        <div class="flex flex-col">
                                         <span>Level 5. Optimum</span>
+                                            @if(!empty($indikator->level_5_kriteria))
+                                                <small class="text-xs text-gray-600 mt-1">
+                                                    {{ $indikator->level_5_kriteria }}
+                                                </small>
+                                            @endif
+                                        </div>
                                     </div>
                                 </label>
                             </div>
                         </div>
 
-
+                        {{-- Catatan Penjelasan Koreksi Walidata --}}
+                        @if ($role == 'walidata')
+                            <div class="mt-5">
+                                <label for="catatan_koreksi" class="text-sm font-semibold text-gray-700 mb-1 block">
+                                    <i class="fas fa-comment-dots text-blue-600 mr-2"></i>Penjelasan Koreksi
+                                </label>
+                                <div class="text-xs text-gray-500 mb-2">
+                                    Berikan penjelasan mengenai koreksi penilaian ini (opsional)
+                                </div>
+                                @if ($nilai_dikoreksi && $nilai_dikoreksi->catatan_koreksi)
+                                    <textarea id="catatan_koreksi" name="catatan_koreksi" rows="4" 
+                                        class="w-full border-2 border-gray-300 rounded-lg p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200" 
+                                        disabled>{{ $nilai_dikoreksi->catatan_koreksi }}</textarea>
+                                @else
+                                    <textarea id="catatan_koreksi" name="catatan_koreksi" rows="4" 
+                                        class="w-full border-2 border-gray-300 rounded-lg p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200" 
+                                        placeholder="Contoh: Nilai dinaikkan karena bukti dukung sudah lengkap dan sesuai dengan standar yang ditetapkan..."></textarea>
+                                @endif
+                            </div>
+                        @endif
 
 
                         @if ($role == 'admin')
@@ -300,55 +367,6 @@ use App\Models\Penilaian;
                                 <textarea id="evaluasi" name="evaluasi" rows="4" class="w-full border rounded p-2 text-sm"
                                     placeholder="Masukkan evaluasi..."></textarea>
 
-                            </div>
-                        @endif
-
-                        @if ($role == 'walidata' || $role == 'admin')
-                            <div class="mt-5">
-                                <label class="text-sm font-semibold text-gray-700 mb-1 block">Bukti Dukung</label>
-                                <div class="text-xs text-gray-500 mb-2">Unggah bukti dalam format .pdf maksimal 3 MB</div>
-
-                                @if ($role == 'walidata' && $nilai_diinput)
-                                    @php
-                                        $buktiDukungFiles = $nilai_diinput->bukti_dukung != '-'
-                                            ? json_decode($nilai_diinput->bukti_dukung)
-                                            : [];
-                                    @endphp
-                                    @if (!empty($buktiDukungFiles))
-                                        @foreach ($buktiDukungFiles as $buktiFile)
-                                            @if (substr($buktiFile, -3) == 'pdf')
-                                                <a href="{{ asset($buktiFile) }}"
-                                                    class="block w-full text-gray-700 rounded p-5 shadow border-2 text-sm mb-4" target="_blank">
-                                                    Lihat PDF
-                                                </a>
-                                            @else
-                                                <a href="{{ asset($buktiFile) }}" target="_blank">
-                                                    <img src="{{ asset($buktiFile) }}"
-                                                        class="block w-40 text-gray-700 rounded p-2 shadow border-2 text-sm mb-4"
-                                                        alt="Bukti Dukung">
-                                                </a>
-                                            @endif
-                                        @endforeach
-                                        <div class="text-green-500 text-sm">Bukti dukung sudah diunggah</div>
-                                    @endif
-                                @endif
-
-                                @if ($role == 'walidata' && !$nilai_diinput)
-                                    <div id="buktiDukungContainer">
-                                        <div id="inputFormRow" class="mb-3">
-                                            <div class="flex items-center space-x-2">
-                                                <input type="file" name="bukti_dukung[]"
-                                                    class="block w-full text-gray-700 rounded p-5 shadow border-2 text-sm"
-                                                    accept=".pdf" />
-                                            </div>
-                                        </div>
-                                        <div id="newBuktiDukungRow"></div>
-                                        <button type="button" id="addBuktiDukungRow"
-                                            class="btn btn-sm text-black bg-green-300 border-2 mb-4">
-                                            Tambah Bukti Dukung
-                                        </button>
-                                    </div>
-                                @endif
                             </div>
                         @endif
 
@@ -404,7 +422,14 @@ use App\Models\Penilaian;
                                                     class="mt-1 accent-blue-600"
                                                     {{ $nilaiEvaluasiterkunci == 1 ? 'checked' : '' }}
                                                     {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 1 ? 'disabled' : '' }}>
+                                                <div class="flex flex-col">
                                                 <span>Level 1. Rintisan</span>
+                                                    @if(!empty($indikator->level_1_kriteria))
+                                                        <small class="text-xs text-gray-600 mt-1">
+                                                            {{ $indikator->level_1_kriteria }}
+                                                        </small>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </label>
                                         <label for="level2_evaluasi" class="{{ $styleEvaluasi }}">
@@ -413,7 +438,14 @@ use App\Models\Penilaian;
                                                     class="mt-1 accent-blue-600"
                                                     {{ $nilaiEvaluasiterkunci == 2 ? 'checked' : '' }}
                                                     {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 2 ? 'disabled' : '' }}>
+                                                <div class="flex flex-col">
                                                 <span>Level 2. Terkelola</span>
+                                                    @if(!empty($indikator->level_2_kriteria))
+                                                        <small class="text-xs text-gray-600 mt-1">
+                                                            {{ $indikator->level_2_kriteria }}
+                                                        </small>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </label>
                                         <label for="level3_evaluasi" class="{{ $styleEvaluasi }}">
@@ -422,7 +454,14 @@ use App\Models\Penilaian;
                                                     class="mt-1 accent-blue-600"
                                                     {{ $nilaiEvaluasiterkunci == 3 ? 'checked' : '' }}
                                                     {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 3 ? 'disabled' : '' }}>
+                                                <div class="flex flex-col">
                                                 <span>Level 3. Terdefinisi</span>
+                                                    @if(!empty($indikator->level_3_kriteria))
+                                                        <small class="text-xs text-gray-600 mt-1">
+                                                            {{ $indikator->level_3_kriteria }}
+                                                        </small>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </label>
                                         <label for="level4_evaluasi" class="{{ $styleEvaluasi }}">
@@ -431,7 +470,14 @@ use App\Models\Penilaian;
                                                     class="mt-1 accent-blue-600"
                                                     {{ $nilaiEvaluasiterkunci == 4 ? 'checked' : '' }}
                                                     {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 4 ? 'disabled' : '' }}>
+                                                <div class="flex flex-col">
                                                 <span>Level 4. Terpadu</span>
+                                                    @if(!empty($indikator->level_4_kriteria))
+                                                        <small class="text-xs text-gray-600 mt-1">
+                                                            {{ $indikator->level_4_kriteria }}
+                                                        </small>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </label>
                                         <label for="level5_evaluasi" class="{{ $styleEvaluasi }}">
@@ -440,11 +486,30 @@ use App\Models\Penilaian;
                                                     class="mt-1 accent-blue-600"
                                                     {{ $nilaiEvaluasiterkunci == 5 ? 'checked' : '' }}
                                                     {{ $nilaiEvaluasiterkunci !== null && $nilaiEvaluasiterkunci != 5 ? 'disabled' : '' }}>
+                                                <div class="flex flex-col">
                                                 <span>Level 5. Optimum</span>
+                                                    @if(!empty($indikator->level_5_kriteria))
+                                                        <small class="text-xs text-gray-600 mt-1">
+                                                            {{ $indikator->level_5_kriteria }}
+                                                        </small>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </label>
                                     </div>
                                 </div>
+
+                                {{-- Tampilkan Catatan Koreksi dari Walidata untuk Admin --}}
+                                @if($penilaianWalidata && $penilaianWalidata->catatan_koreksi)
+                                    <div class="mt-5 border-2 border-green-400 rounded-lg p-4 bg-green-50">
+                                        <label class="text-sm font-semibold text-green-700 mb-2 block">
+                                            <i class="fas fa-comment-dots mr-2"></i>Penjelasan Koreksi dari Walidata
+                                        </label>
+                                        <p class="text-md text-gray-900 bg-white p-3 rounded border">
+                                            {{ $penilaianWalidata->catatan_koreksi }}
+                                        </p>
+                                    </div>
+                                @endif
 
                                 <div class="mt-5 font-semibold">
                                     <label for="evaluasi"
@@ -453,48 +518,6 @@ use App\Models\Penilaian;
                                         class="w-full border-gray-500 border-2 rounded p-2 text-md shadow-md"
                                         placeholder="Masukkan evaluasi...">{{ $nilai_diinput->evaluasi ?? '' }}</textarea>
                                 </div>
-
-                                @if ($role == 'admin' && $nilai_dievaluasi)
-                                    @php
-                                        $buktiDukungFiles = $nilai_dievaluasi->bukti_dukung != '-'
-                                            ? json_decode($nilai_dievaluasi->bukti_dukung)
-                                            : [];
-                                    @endphp
-                                    @if (!empty($buktiDukungFiles))
-                                        @foreach ($buktiDukungFiles as $buktiFile)
-                                            @if (substr($buktiFile, -3) == 'pdf')
-                                                <a href="{{ asset($buktiFile) }}"
-                                                    class="block w-full text-gray-700 rounded p-5 shadow border-2 text-sm mb-4" target="_blank">
-                                                    Lihat PDF
-                                                </a>
-                                            @else
-                                                <a href="{{ asset($buktiFile) }}" target="_blank">
-                                                    <img src="{{ asset($buktiFile) }}"
-                                                        class="block w-40 text-gray-700 rounded p-2 shadow border-2 text-sm mb-4"
-                                                        alt="Bukti Dukung">
-                                                </a>
-                                            @endif
-                                        @endforeach
-                                        <div class="text-green-500 text-sm">Bukti dukung sudah diunggah</div>
-                                    @endif
-                                @endif
-
-                                @if ($role == 'admin' && !$nilai_dievaluasi)
-                                    <div id="buktiDukungContainer">
-                                        <div id="inputFormRow" class="mb-3">
-                                            <div class="flex items-center space-x-2">
-                                                <input type="file" name="bukti_dukung[]"
-                                                    class="block w-full text-gray-700 rounded p-5 shadow border-2 text-sm"
-                                                    accept=".pdf" />
-                                            </div>
-                                        </div>
-                                        <div id="newBuktiDukungRow"></div>
-                                        <button type="button" id="addBuktiDukungRow"
-                                            class="btn btn-sm text-black bg-green-300 border-2 mb-4">
-                                            Tambah Bukti Dukung
-                                        </button>
-                                    </div>
-                                @endif
 
                                 <div class="mt-10">
                                     @if ($nilai_diinput->evaluasi != null)
@@ -576,39 +599,6 @@ use App\Models\Penilaian;
 
             // Tambahkan event saat diklik
             radiosEvaluasi.on('change', updateSelectedEvaluasiBackground);
-        });
-
-        $(function() {
-            // Bukti Dukung Dynamic Rows
-            let buktiDukungRowCount = 1;
-            $("#addBuktiDukungRow").click(function() {
-                if (buktiDukungRowCount >= 3) {
-                    alert('Maksimal 3 bukti dukung');
-                    return;
-                }
-
-                buktiDukungRowCount++;
-                var html = `
-                    <div id="inputFormRow" class="mb-3">
-                        <div class="flex items-center space-x-2">
-                            <input type="file" name="bukti_dukung[]"
-                                class="block w-full text-gray-700 rounded p-5 shadow border-2 text-sm"
-                                accept=".pdf" />
-                            <button type="button" class="removeBuktiDukungRow text-red-600 hover:text-red-800">
-                                Hapus
-                            </button>
-                        </div>
-                    </div>
-                `;
-
-                $('#newBuktiDukungRow').append(html);
-            });
-
-            // Remove row
-            $(document).on('click', '.removeBuktiDukungRow', function() {
-                $(this).closest('#inputFormRow').remove();
-                buktiDukungRowCount--;
-            });
         });
     </script>
 @endpush

@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'plain_password', // ⚠️ WARNING: Menyimpan password plain text tidak aman!
         'role',
         'alamat',
         'nomor_telepon'
